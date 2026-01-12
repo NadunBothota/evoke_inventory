@@ -1,22 +1,50 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2>User Management</h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="p-6">
-        <a href="{{ route('admin.users.create') }}" class="btn">Add User</a>
+@section('content')
+    <h2 class="h4 font-weight-bold">
+        User Management
+    </h2>
 
-        <table class="mt-4 w-full border">
-            <tr>
-                <th>Name</th><th>Email</th><th>Role</th>
-            </tr>
-            @foreach($users as $user)
-            <tr>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-                <td>{{ ucfirst($user->role) }}</td>
-            </tr>
-            @endforeach
-        </table>
+    <div class="card my-4">
+        @if(auth()->user()->role === 'super_admin')
+            <div class="card-header">
+                <a href="{{ route('admin.users.create') }}" class="btn btn-primary">+ Add User</a>
+            </div>
+        @endif
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
+                        @if(auth()->user()->role === 'super_admin')
+                            <th scope="col">Actions</th>
+                        @endif
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($users as $user)
+                        <tr>
+                            <th scope="row">{{ $loop->iteration }}</th>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td><span class="badge bg-{{ $user->role == 'admin' ? 'danger' : 'info' }}">{{ ucfirst($user->role) }}</span></td>
+                            @if(auth()->user()->role === 'super_admin')
+                                <td>
+                                    <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-primary">Edit</a>
+                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST" style="display: inline-block;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
+                                    </form>
+                                </td>
+                            @endif
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
-</x-app-layoutx>
+@endsection

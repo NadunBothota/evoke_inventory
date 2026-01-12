@@ -1,100 +1,83 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="text-xl font-semibold">Items</h2>
+@extends('layouts.app')
 
-            @unless(auth()->user()->isReadOnly())
-                <a href="{{ route('admin.items.create') }}"
-                   class="bg-blue-600 text-white px-4 py-2 rounded">
-                    Add Item
-                </a>
-            @endunless
-        </div>
-    </x-slot>
+@section('content')
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="h4 font-weight-bold">
+            Items
+        </h2>
 
-    <div class="mt-6 bg-white shadow rounded p-4">
-
-        <table class="w-full border-collapse border">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="border p-2">Serial</th>
-                    <th class="border p-2">Device</th>
-                    <th class="border p-2">User</th>
-                    <th class="border p-2">Status</th>
-                    <th class="border p-2">Category</th>
-                    <th class="border p-2">Photo</th>
-                    <th class="border p-2">Police Report</th>
-                    <th class="border p-2">Actions</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @forelse ($items as $item)
-                    <tr>
-                        <td class="border p-2">{{ $item->serial_number }}</td>
-                        <td class="border p-2">{{ $item->device_name }}</td>
-                        <td class="border p-2">{{ $item->item_user }}</td>
-                        <td class="border p-2">{{ ucfirst($item->status) }}</td>
-                        <td class="border p-2">{{ $item->category->name }}</td>
-
-                        <!-- Photo -->
-                        <td class="border p-2">
-                            @if ($item->photo)
-                                <img src="{{ asset('storage/' . $item->photo) }}"
-                                     class="w-16 h-16 object-cover rounded border">
-                            @else
-                                <span class="text-gray-400">No Image</span>
-                            @endif
-                        </td>
-
-                        <!-- Police Report -->
-                        <td class="border p-2 text-center">
-                            @if ($item->police_report)
-                                <a href="{{ asset('storage/' . $item->police_report) }}"
-                                   target="_blank"
-                                   class="text-blue-600 underline">
-                                    View
-                                </a>
-                            @else
-                                <span class="text-gray-400">—</span>
-                            @endif
-                        </td>
-
-                        <!-- Actions -->
-                        <td class="border p-2 text-center">
-                            @unless(auth()->user()->isReadOnly())
-                                <a href="{{ route('admin.items.edit', $item) }}"
-                                   class="text-blue-600 mr-2">
-                                    Edit
-                                </a>
-
-                                <form action="{{ route('admin.items.destroy', $item) }}"
-                                      method="POST"
-                                      class="inline">
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button type="submit"
-                                            class="text-red-600"
-                                            onclick="return confirm('Delete this item?')">
-                                        Delete
-                                    </button>
-                                </form>
-                            @else
-                                <span class="text-gray-400">View only</span>
-                            @endunless
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="8"
-                            class="text-center p-4 text-gray-500">
-                            No items found.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-
+        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'super_admin')
+            <a href="{{ route('admin.items.create') }}" class="btn btn-primary">+ Add Item</a>
+        @endif
     </div>
-</x-app-layout>
+
+    <div class="card my-4">
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Serial</th>
+                        <th scope="col">Device</th>
+                        <th scope="col">User</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Photo</th>
+                        <th scope="col">Police Report</th>
+                        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'super_admin')
+                            <th scope="col">Actions</th>
+                        @endif
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($items as $item)
+                        <tr>
+                            <td>{{ $item->serial_number }}</td>
+                            <td>{{ $item->device_name }}</td>
+                            <td>{{ $item->item_user }}</td>
+                            <td>
+                                @php
+                                    $statusClass = match($item->status) {
+                                        'working' => 'success',
+                                        'not_working' => 'danger',
+                                        'misplaced' => 'warning',
+                                        default => 'secondary',
+                                    };
+                                @endphp
+                                <span class="badge bg-{{ $statusClass }}">{{ ucfirst(str_replace('_', ' ', $item->status)) }}</span>
+                            </td>
+                            <td>{{ $item->category?->name ?? 'Uncategorized' }}</td>
+                            <td>
+                                @if ($item->photo)
+                                    <img src="{{ asset('storage/' . $item->photo) }}" alt="{{ $item->device_name }}" class="img-thumbnail" style="width: 50px; height: 50px;">
+                                @else
+                                    <span class="text-muted">No Image</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($item->police_report)
+                                    <a href="{{ asset('storage/' . $item->police_report) }}" target="_blank" class="btn btn-sm btn-outline-info">View</a>
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
+                            </td>
+                            @if(auth()->user()->role === 'admin' || auth()->user()->role === 'super_admin')
+                                <td>
+                                    <a href="{{ route('admin.items.edit', $item) }}" class="btn btn-sm btn-primary">Edit</a>
+                                    <form action="{{ route('admin.items.destroy', $item) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
+                                    </form>
+                                </td>
+                            @endif
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="{{ (auth()->user()->role === 'admin' || auth()->user()->role === 'super_admin') ? '8' : '7' }}" class="text-center">No items found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+@endsection

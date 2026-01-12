@@ -1,173 +1,133 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold">Add New Item</h2>
-    </x-slot>
+@extends('layouts.app')
+
+@section('content')
+    <h2 class="h4 font-weight-bold">Add New Item</h2>
 
     {{-- Read-only warning --}}
     @if(auth()->user()->isReadOnly())
-        <div class="max-w-4xl mx-auto mt-6 bg-yellow-100 text-yellow-800 p-4 rounded">
+        <div class="alert alert-warning" role="alert">
             You have read-only access. Creating new items is disabled.
         </div>
     @endif
 
-    <div class="max-w-4xl mx-auto mt-6 bg-white p-6 shadow rounded">
+    <div class="card my-4">
+        <div class="card-body">
 
-        {{-- Validation Errors --}}
-        @if ($errors->any())
-            <div class="mb-4 text-red-600">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>• {{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+            {{-- Validation Errors --}}
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-        <form action="{{ route('admin.items.store') }}"
-              method="POST"
-              enctype="multipart/form-data">
-            @csrf
+            <form action="{{ route('admin.items.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
 
-            @php
-                $readonly = auth()->user()->isReadOnly();
-            @endphp
+                @php
+                    $readonly = auth()->user()->isReadOnly();
+                @endphp
 
-            <!-- Serial Number -->
-            <div class="mb-4">
-                <label class="block">Serial Number</label>
-                <input type="text"
-                       name="serial_number"
-                       value="{{ old('serial_number') }}"
-                       class="w-full border p-2"
-                       {{ $readonly ? 'disabled' : 'required' }}>
-            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- Serial Number -->
+                        <div class="mb-3">
+                            <label for="serial_number" class="form-label">Serial Number</label>
+                            <input type="text" class="form-control" id="serial_number" name="serial_number" value="{{ old('serial_number') }}" {{ $readonly ? 'disabled' : 'required' }}>
+                        </div>
 
-            <!-- Device Name -->
-            <div class="mb-4">
-                <label class="block">Device Name</label>
-                <input type="text"
-                       name="device_name"
-                       value="{{ old('device_name') }}"
-                       class="w-full border p-2"
-                       {{ $readonly ? 'disabled' : 'required' }}>
-            </div>
+                        <!-- Device Name -->
+                        <div class="mb-3">
+                            <label for="device_name" class="form-label">Device Name</label>
+                            <input type="text" class="form-control" id="device_name" name="device_name" value="{{ old('device_name') }}" {{ $readonly ? 'disabled' : 'required' }}>
+                        </div>
 
-            <!-- Item User -->
-            <div class="mb-4">
-                <label class="block">Item User</label>
-                <input type="text"
-                       name="item_user"
-                       value="{{ old('item_user') }}"
-                       class="w-full border p-2"
-                       {{ $readonly ? 'disabled' : 'required' }}>
-            </div>
+                        <!-- Item User -->
+                        <div class="mb-3">
+                            <label for="item_user" class="form-label">Item User</label>
+                            <input type="text" class="form-control" id="item_user" name="item_user" value="{{ old('item_user') }}" {{ $readonly ? 'disabled' : 'required' }}>
+                        </div>
 
-            <!-- Department -->
-            <div class="mb-4">
-                <label class="block">Department</label>
-                <input type="text"
-                       name="department"
-                       value="{{ old('department') }}"
-                       class="w-full border p-2"
-                       {{ $readonly ? 'disabled' : 'required' }}>
-            </div>
+                         <!-- Department -->
+                        <div class="mb-3">
+                            <label for="department" class="form-label">Department</label>
+                            <input type="text" class="form-control" id="department" name="department" value="{{ old('department') }}" {{ $readonly ? 'disabled' : 'required' }}>
+                        </div>
+                    </div>
 
-            <!-- Reference Number -->
-            <div class="mb-4">
-                <label class="block">Reference Number</label>
-                <input type="text"
-                       name="reference_number"
-                       value="{{ old('reference_number') }}"
-                       class="w-full border p-2"
-                       {{ $readonly ? 'disabled' : 'required' }}>
-            </div>
+                    <div class="col-md-6">
+                        <!-- Reference Number -->
+                        <div class="mb-3">
+                            <label for="reference_number" class="form-label">Reference Number</label>
+                            <input type="text" class="form-control" id="reference_number" name="reference_number" value="{{ old('reference_number') }}" {{ $readonly ? 'disabled' : 'required' }}>
+                        </div>
 
-            <!-- Value -->
-            <div class="mb-4">
-                <label class="block">Item Value</label>
-                <input type="number"
-                       step="0.01"
-                       name="value"
-                       value="{{ old('value') }}"
-                       class="w-full border p-2"
-                       {{ $readonly ? 'disabled' : 'required' }}>
-            </div>
+                        <!-- Value -->
+                        <div class="mb-3">
+                            <label for="value" class="form-label">Item Value</label>
+                            <input type="number" step="0.01" class="form-control" id="value" name="value" value="{{ old('value') }}" {{ $readonly ? 'disabled' : 'required' }}>
+                        </div>
 
-            <!-- Status -->
-            <div class="mb-4">
-                <label class="block">Status</label>
-                <select name="status"
-                        id="status"
-                        class="w-full border p-2"
-                        onchange="togglePoliceReport()"
-                        {{ $readonly ? 'disabled' : 'required' }}>
-                    <option value="">-- Select Status --</option>
-                    <option value="working">Working</option>
-                    <option value="not_working">Not Working</option>
-                    <option value="misplaced">Misplaced</option>
-                </select>
-            </div>
+                        <!-- Status -->
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status" onchange="togglePoliceReport()" {{ $readonly ? 'disabled' : 'required' }}>
+                                <option value="">-- Select Status --</option>
+                                <option value="working">Working</option>
+                                <option value="not_working">Not Working</option>
+                                <option value="misplaced">Misplaced</option>
+                            </select>
+                        </div>
 
-            <!-- Police Report -->
-            <div id="policeReportField" class="mb-4 hidden">
-                <label class="block">Police Report</label>
-                <input type="file"
-                       name="police_report"
-                       accept=".pdf,.jpg,.jpeg,.png"
-                       class="w-full border p-2"
-                       {{ $readonly ? 'disabled' : '' }}>
-            </div>
+                        <!-- Police Report -->
+                        <div id="policeReportField" class="mb-3 d-none">
+                            <label for="police_report" class="form-label">Police Report</label>
+                            <input type="file" class="form-control" id="police_report" name="police_report" accept=".pdf,.jpg,.jpeg,.png" {{ $readonly ? 'disabled' : '' }}>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Category -->
-            <div class="mb-4">
-                <label class="block">Category</label>
-                <select name="category_id"
-                        class="w-full border p-2"
-                        {{ $readonly ? 'disabled' : 'required' }}>
-                    <option value="">-- Select Category --</option>
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->id }}">
-                            {{ $category->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+                <div class="row">
+                     <div class="col-md-6">
+                        <!-- Category -->
+                        <div class="mb-3">
+                            <label for="category_id" class="form-label">Category</label>
+                            <select class="form-select" id="category_id" name="category_id" {{ $readonly ? 'disabled' : 'required' }}>
+                                <option value="">-- Select Category --</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Photo -->
+                        <div class="mb-3">
+                            <label for="photo" class="form-label">Item Photo</label>
+                            <input type="file" class="form-control" id="photo" name="photo" accept=".jpg,.jpeg,.png" {{ $readonly ? 'disabled' : '' }}>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Photo -->
-            <div class="mb-4">
-                <label class="block">Item Photo</label>
-                <input type="file"
-                       name="photo"
-                       accept=".jpg,.jpeg,.png"
-                       class="w-full border p-2"
-                       {{ $readonly ? 'disabled' : '' }}>
-            </div>
+                <!-- Comment -->
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Comment</label>
+                    <textarea class="form-control" id="comment" name="comment" rows="3" {{ $readonly ? 'disabled' : '' }}>{{ old('comment') }}</textarea>
+                </div>
 
-            <!-- Comment -->
-            <div class="mb-4">
-                <label class="block">Comment</label>
-                <textarea name="comment"
-                          class="w-full border p-2"
-                          rows="3"
-                          {{ $readonly ? 'disabled' : '' }}>{{ old('comment') }}</textarea>
-            </div>
+                <!-- Submit -->
+                <div class="d-flex justify-content-end">
+                    <a href="{{ route('admin.items.index') }}" class="btn btn-secondary me-2">Cancel</a>
+                    @unless($readonly)
+                        <button type="submit" class="btn btn-primary">Save Item</button>
+                    @endunless
+                </div>
 
-            <!-- Submit -->
-            <div class="flex justify-end">
-                <a href="{{ route('admin.items.index') }}"
-                   class="mr-4 text-gray-600">
-                    Cancel
-                </a>
-
-                @unless($readonly)
-                    <button type="submit"
-                            class="bg-blue-600 text-white px-4 py-2 rounded">
-                        Save Item
-                    </button>
-                @endunless
-            </div>
-
-        </form>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -176,10 +136,10 @@
             const policeField = document.getElementById('policeReportField');
 
             if (status === 'misplaced') {
-                policeField.classList.remove('hidden');
+                policeField.classList.remove('d-none');
             } else {
-                policeField.classList.add('hidden');
+                policeField.classList.add('d-none');
             }
         }
     </script>
-</x-app-layout>
+@endsection

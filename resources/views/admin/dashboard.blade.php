@@ -1,9 +1,9 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="'font-semibold text-xl">
-            Admin Dashboard
-        </h2>
-    </x-slotx>
+@extends('layouts.app')
+
+@section('content')
+    <h2 class="'font-semibold text-xl">
+        Admin Dashboard
+    </h2>
 
     <div class="p-6">
         <p>Welcome, {{ auth()->user()->name }}</p>
@@ -14,4 +14,4 @@
             <li>Manage Users (Super Admin Only)</li>
         </ul>
     </div>
-</x-app-layout>
+@endsection

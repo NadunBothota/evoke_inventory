@@ -1,7 +1,7 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text xl font-semibold">Audit Logs</h2>
-    </x-slot>
+@extends('layouts.app')
+
+@section('content')
+    <h2 class="text xl font-semibold">Audit Logs</h2>
 
     <div class="mt-6 bg-white shadow rounded p-4">
         <table class="w-full border">
@@ -31,4 +31,4 @@
 
         </div>
     </div>
-</x-app-layout>
+@endsection
