@@ -103,8 +103,9 @@
                     </div>
                 </header>
             @endisset
-
+            <div class="container">
             @yield('content')
+            </div>
         </main>
     </div>
 </div>

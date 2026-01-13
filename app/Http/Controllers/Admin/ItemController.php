@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Item;
+use App\Exports\ItemsExport;
+use App\Models\AuditLog;
 use App\Models\Category;
+use App\Models\Item;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Models\AuditLog;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ItemController extends Controller
 {
@@ -23,9 +26,35 @@ class ItemController extends Controller
         }
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $items = Item::with('category')->get();
+        $itemsQuery = Item::with('category')->orderBy('category_id');
+
+        if ($request->filled('category')) {
+            $itemsQuery->where('category_id', $request->category);
+        }
+
+        if ($request->filled('user')) {
+            $itemsQuery->where('item_user', 'like', '%' . $request->user . '%');
+        }
+
+        if ($request->filled('department')) {
+            $itemsQuery->where('department', 'like', '%' . $request->department . '%');
+        }
+
+        if ($request->filled('status')) {
+            $itemsQuery->where('status', $request->status);
+        }
+
+        if ($request->filled('min_value')) {
+            $itemsQuery->where('value', '>=', $request->min_value);
+        }
+
+        if ($request->filled('max_value')) {
+            $itemsQuery->where('value', '<=', $request->max_value);
+        }
+
+        $items = $itemsQuery->get();
         return view('admin.items.index', compact('items'));
     }
 
@@ -41,7 +70,7 @@ class ItemController extends Controller
     {
         $this->denyReadOnly();
 
-        $request->validate([
+        $validated = $request->validate([
             'serial_number' => 'required|unique:items,serial_number',
             'item_user' => 'required|string',
             'device_name' => 'required|string',
@@ -56,24 +85,23 @@ class ItemController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')
-                ->store('item_photos', 'public');
+            $validated['photo'] = $request->file('photo')->store('item_photos', 'public');
         }
 
-        if ($request->status === 'misplaced' && $request->hasFile('police_report')) {
-            $validated['police_report'] = $request->file('police_report')
-                ->store('police-reports', 'public');
+        if ($request->hasFile('police_report')) {
+            $validated['police_report'] = $request->file('police_report')->store('police-reports', 'public');
         }
 
         $item = Item::create($validated);
 
-        AuditLog::create([
-            'user_id' => Auth::id(),
-            'item_id' => $item->id,
-            'action' => 'created',
-            'old_values' => null,
-            'new_values' => $item->toArray(),
-        ]);
+        $auditLog = new AuditLog();
+        $auditLog->user_id = Auth::id();
+        $auditLog->item_id = $item->id;
+        $auditLog->action = 'created';
+        $auditLog->model = 'Item';
+        $auditLog->old_values = null;
+        $auditLog->new_values = $item->toArray();
+        $auditLog->save();
 
         return redirect()
             ->route('admin.items.index')
@@ -112,27 +140,26 @@ class ItemController extends Controller
             if ($item->photo) {
                 Storage::disk('public')->delete($item->photo);
             }
-
-            $validated['phooto'] = $request->file('photo')
-                ->store('item_photos', 'public');
+            $validated['photo'] = $request->file('photo')->store('item_photos', 'public');
         }
 
-        $item->update($request->except('photo'));
-
-        if ($request->status === 'misplaced' && $request->hasFile('police_report')) {
-            $validated['police_report'] = $request->file('police_report')
-                ->store('police-reports', 'public');
+        if ($request->hasFile('police_report')) {
+            if ($item->police_report) {
+                Storage::disk('public')->delete($item->police_report);
+            }
+            $validated['police_report'] = $request->file('police_report')->store('police-reports', 'public');
         }
 
         $item->update($validated);
 
-        AuditLog::create([
-            'user_id' => Auth::id(),
-            'item_id' => $item->id,
-            'action' => 'updated', 
-            'old_values' => $oldValues,
-            'new_values' => $item->fresh()->toArray(),
-        ]);
+        $auditLog = new AuditLog();
+        $auditLog->user_id = Auth::id();
+        $auditLog->item_id = $item->id;
+        $auditLog->action = 'updated';
+        $auditLog->model = 'Item';
+        $auditLog->old_values = $oldValues;
+        $auditLog->new_values = $item->fresh()->toArray();
+        $auditLog->save();
 
         return redirect()
             ->route('admin.items.index')
@@ -148,16 +175,20 @@ class ItemController extends Controller
         if ($item->photo) {
             Storage::disk('public')->delete($item->photo);
         }
+        if ($item->police_report) {
+            Storage::disk('public')->delete($item->police_report);
+        }
 
         $item->delete();
 
-        AuditLog::created([
-            'user_id' => Auth::id(),
-            'item_id' => $item->id,
-            'action' => 'deleted',
-            'old_values' => $oldValues,
-            'new_values' => null,
-        ]);
+        $auditLog = new AuditLog();
+        $auditLog->user_id = Auth::id();
+        $auditLog->item_id = $item->id;
+        $auditLog->action = 'deleted';
+        $auditLog->model = 'Item';
+        $auditLog->old_values = $oldValues;
+        $auditLog->new_values = null;
+        $auditLog->save();
 
         return redirect()
             ->route('admin.items.index')
@@ -167,5 +198,47 @@ class ItemController extends Controller
     public function show(Item $item)
     {
         return view('admin.items.show', compact('item'));
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $this->denyReadOnly();
+        return Excel::download(new ItemsExport($request->all()), 'items.xlsx');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $this->denyReadOnly();
+
+        $itemsQuery = Item::with('category');
+
+        if ($request->filled('category')) {
+            $itemsQuery->where('category_id', $request->category);
+        }
+
+        if ($request->filled('user')) {
+            $itemsQuery->where('item_user', 'like', '%' . $request->user . '%');
+        }
+
+        if ($request->filled('department')) {
+            $itemsQuery->where('department', 'like', '%' . $request->department . '%');
+        }
+
+        if ($request->filled('status')) {
+            $itemsQuery->where('status', $request->status);
+        }
+
+        if ($request->filled('min_value')) {
+            $itemsQuery->where('value', '>=', $request->min_value);
+        }
+
+        if ($request->filled('max_value')) {
+            $itemsQuery->where('value', '<=', $request->max_value);
+        }
+
+        $items = $itemsQuery->get();
+        $pdf = PDF::loadView('exports.items-pdf', compact('items'));
+
+        return $pdf->download('items.pdf');
     }
 }
