@@ -12,6 +12,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ItemController extends Controller
@@ -75,7 +76,6 @@ class ItemController extends Controller
             'item_user' => 'required|string',
             'device_name' => 'required|string',
             'department' => 'required|string',
-            'reference_number' => 'required|string',
             'value' => 'required|numeric',
             'status' => 'required|in:working,not_working,misplaced',
             'category_id' => 'required|exists:categories,id',
@@ -83,6 +83,32 @@ class ItemController extends Controller
             'comment' => 'nullable|string',
             'police_report' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
+
+        $category = Category::findOrFail($validated['category_id']);
+        $prefix = trim(implode('/', array_filter([$category->ref_group, $category->ref_code])));
+
+        if (empty($prefix)) {
+            $prefix = strtoupper(substr($category->name, 0, 3));
+        }
+
+        $lastItemNumber = Item::where('reference_number', 'like', $prefix . '%')
+            ->pluck('reference_number')
+            ->map(function ($ref) {
+                $parts = explode('-', $ref);
+                return (int) end($parts);
+            })
+            ->max();
+
+        $nextNumber = ($lastItemNumber ?: 0) + 1;
+
+        if ($nextNumber > 9999) {
+            throw ValidationException::withMessages([
+                'category_id' =>
+                    'Cannot create item. The maximum number of items (9999) for this category has been reached.',
+            ]);
+        }
+
+        $validated['reference_number'] = $prefix . '-' . $nextNumber;
 
         if ($request->hasFile('photo')) {
             $validated['photo'] = $request->file('photo')->store('item_photos', 'public');
@@ -127,7 +153,6 @@ class ItemController extends Controller
             'item_user' => 'required|string',
             'device_name' => 'required|string',
             'department' => 'required|string',
-            'reference_number' => 'required|string',
             'value' => 'required|numeric',
             'status' => 'required|in:working,not_working,misplaced',
             'category_id' => 'required|exists:categories,id',
@@ -149,6 +174,35 @@ class ItemController extends Controller
             }
             $validated['police_report'] = $request->file('police_report')->store('police-reports', 'public');
         }
+        
+        if ($item->category_id !== $validated['category_id']) {
+            $category = Category::findOrFail($validated['category_id']);
+            $prefix = trim(implode('/', array_filter([$category->ref_group, $category->ref_code])));
+
+            if (empty($prefix)) {
+                $prefix = strtoupper(substr($category->name, 0, 3));
+            }
+
+            $lastItemNumber = Item::where('reference_number', 'like', $prefix . '%')
+                ->pluck('reference_number')
+                ->map(function ($ref) {
+                    $parts = explode('-', $ref);
+                    return (int) end($parts);
+                })
+                ->max();
+
+            $nextNumber = ($lastItemNumber ?: 0) + 1;
+
+            if ($nextNumber > 9999) {
+                throw ValidationException::withMessages([
+                    'category_id' =>
+                        'Cannot create item. The maximum number of items (9999) for this category has been reached.',
+                ]);
+            }
+
+            $validated['reference_number'] = $prefix . '-' . $nextNumber;
+        }
+
 
         $item->update($validated);
 

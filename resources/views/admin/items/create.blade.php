@@ -59,12 +59,6 @@
                     </div>
 
                     <div class="col-md-6">
-                        <!-- Reference Number -->
-                        <div class="mb-3">
-                            <label for="reference_number" class="form-label">Reference Number</label>
-                            <input type="text" class="form-control" id="reference_number" name="reference_number" value="{{ old('reference_number') }}" {{ $readonly ? 'disabled' : 'required' }}>
-                        </div>
-
                         <!-- Value -->
                         <div class="mb-3">
                             <label for="value" class="form-label">Item Value</label>
