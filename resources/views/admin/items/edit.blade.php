@@ -63,7 +63,7 @@
                         <!-- Reference Number -->
                         <div class="mb-3">
                             <label for="reference_number" class="form-label">Reference Number</label>
-                            <input type="text" class="form-control" id="reference_number" name="reference_number" value="{{ old('reference_number', $item->reference_number) }}" {{ $readOnly ? 'disabled' : '' }}>
+                            <input type="text" class="form-control" id="reference_number" name="reference_number" value="{{ old('reference_number', $item->reference_number) }}" readonly>
                         </div>
 
                         <!-- Value -->

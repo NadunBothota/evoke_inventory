@@ -11,7 +11,8 @@ class Category extends Model
 
     protected $fillable = [
         'name',
-        'description',
+        'ref_group',
+        'ref_code',
     ];
 
     public function item()

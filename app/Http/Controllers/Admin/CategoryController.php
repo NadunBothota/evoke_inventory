@@ -23,9 +23,29 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name'=>'required|unique:categories',
+            'ref_group' => 'nullable|string',
+            'ref_code' => 'nullable|string',
         ]);
 
-        category::create($request->only('name', 'description'));
+        Category::create($request->only('name', 'ref_group', 'ref_code'));
+
+        return redirect()->route('admin.categories.index');
+    }
+
+    public function edit(Category $category)
+    {
+        return view('admin.categories.edit', compact('category'));
+    }
+
+    public function update(Request $request, Category $category)
+    {
+        $request->validate([
+            'name' => 'required|unique:categories,name,' . $category->id,
+            'ref_group' => 'nullable|string',
+            'ref_code' => 'nullable|string',
+        ]);
+
+        $category->update($request->only('name', 'ref_group', 'ref_code'));
 
         return redirect()->route('admin.categories.index');
     }
