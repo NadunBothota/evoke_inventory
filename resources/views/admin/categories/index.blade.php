@@ -20,7 +20,7 @@
                 @foreach ($categories as $category)
                     <tr>
                         <td>{{ $category->id }}</td>
-                        <td>{{ $category->name }}</td>
+                        <td><a href="{{ route('admin.items.index', ['category' => $category->id]) }}">{{ $category->name }}</a></td>
                         @if(auth()->user()->role === 'admin' || auth()->user()->role === 'super_admin')
                             <td>
                                 <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-sm btn-primary">Edit</a>

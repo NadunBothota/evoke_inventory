@@ -26,9 +26,35 @@ class ItemController extends Controller
         }
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $items = Item::with('category')->orderBy('category_id')->get();
+        $itemsQuery = Item::with('category')->orderBy('category_id');
+
+        if ($request->filled('category')) {
+            $itemsQuery->where('category_id', $request->category);
+        }
+
+        if ($request->filled('user')) {
+            $itemsQuery->where('item_user', 'like', '%' . $request->user . '%');
+        }
+
+        if ($request->filled('department')) {
+            $itemsQuery->where('department', 'like', '%' . $request->department . '%');
+        }
+
+        if ($request->filled('status')) {
+            $itemsQuery->where('status', $request->status);
+        }
+
+        if ($request->filled('min_value')) {
+            $itemsQuery->where('value', '>=', $request->min_value);
+        }
+
+        if ($request->filled('max_value')) {
+            $itemsQuery->where('value', '<=', $request->max_value);
+        }
+
+        $items = $itemsQuery->get();
         return view('admin.items.index', compact('items'));
     }
 
@@ -174,18 +200,43 @@ class ItemController extends Controller
         return view('admin.items.show', compact('item'));
     }
 
-    public function exportExcel()
+    public function exportExcel(Request $request)
     {
         $this->denyReadOnly();
-
-        return Excel::download(new ItemsExport(), 'items.xlsx');
+        return Excel::download(new ItemsExport($request->all()), 'items.xlsx');
     }
 
-    public function exportPdf()
+    public function exportPdf(Request $request)
     {
         $this->denyReadOnly();
 
-        $items = Item::with('category')->get();
+        $itemsQuery = Item::with('category');
+
+        if ($request->filled('category')) {
+            $itemsQuery->where('category_id', $request->category);
+        }
+
+        if ($request->filled('user')) {
+            $itemsQuery->where('item_user', 'like', '%' . $request->user . '%');
+        }
+
+        if ($request->filled('department')) {
+            $itemsQuery->where('department', 'like', '%' . $request->department . '%');
+        }
+
+        if ($request->filled('status')) {
+            $itemsQuery->where('status', $request->status);
+        }
+
+        if ($request->filled('min_value')) {
+            $itemsQuery->where('value', '>=', $request->min_value);
+        }
+
+        if ($request->filled('max_value')) {
+            $itemsQuery->where('value', '<=', $request->max_value);
+        }
+
+        $items = $itemsQuery->get();
         $pdf = PDF::loadView('exports.items-pdf', compact('items'));
 
         return $pdf->download('items.pdf');
