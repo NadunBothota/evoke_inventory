@@ -3,6 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ItemController;
+use App\Http\Controllers\Admin\AuditLogController;
+use App\Http\Controllers\User\DashboardController as UserDashboard;
 
 // Welcome Page
 Route::get('/', function () {
@@ -26,10 +32,6 @@ Route::get('/dashboard', function () {
 // ----------------------------
 // Admin & Super Admin Routes
 // ----------------------------
-use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\ItemController;
 
 // Admin / Super Admin Dashboard & Core Routes for write operations
 Route::middleware(['auth', 'role:super_admin,admin'])->group(function () {
@@ -48,6 +50,12 @@ Route::middleware(['auth', 'role:super_admin,admin'])->group(function () {
     Route::get('/admin/items/{item}/edit', [ItemController::class, 'edit'])->name('admin.items.edit');
     Route::put('/admin/items/{item}', [ItemController::class, 'update'])->name('admin.items.update');
     Route::delete('/admin/items/{item}', [ItemController::class, 'destroy'])->name('admin.items.destroy');
+
+    // Export Routes
+    Route::get('/admin/items/export/excel', [ItemController::class, 'exportExcel'])->name('admin.items.export.excel');
+    Route::get('/admin/items/export/pdf', [ItemController::class, 'exportPdf'])->name('admin.items.export.pdf');
+    Route::get('/admin/audit-logs/export/excel', [AuditLogController::class, 'exportExcel'])->name('admin.audit-logs.export.excel');
+    Route::get('/admin/audit-logs/export/pdf', [AuditLogController::class, 'exportPdf'])->name('admin.audit-logs.export.pdf');
 });
 
 // Routes for viewing items and categories (all authenticated users)
@@ -75,7 +83,6 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
 // ----------------------------
 // Normal User / Read-Only Routes
 // ----------------------------
-use App\Http\Controllers\User\DashboardController as UserDashboard;
 
 // User Dashboard
 Route::middleware(['auth', 'role:user'])->group(function () {
@@ -87,12 +94,8 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 //------------------------------
 // Audit Controller
 //------------------------------
-use App\Http\Controllers\AuditLogController;
-
 Route::middleware(['auth'])->group(function(){
-    Route::get('/admin/audit-logs',
-    [AuditLogController::class, 'index']
-    )->name('admin.audit.logs');
+    Route::get('/admin/audit-logs', [AuditLogController::class, 'index'])->name('admin.audit.logs');
 });
 
 Route::middleware('auth')->group(function () {

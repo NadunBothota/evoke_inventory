@@ -1,34 +1,78 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2 class="text xl font-semibold">Audit Logs</h2>
+    <div class="container">
+        <h1>Audit Logs</h1>
 
-    <div class="mt-6 bg-white shadow rounded p-4">
-        <table class="w-full border">
-            <thead class="bg-gray-100">
+        <div class="mb-3">
+            <a href="{{ route('admin.audit-logs.export.excel') }}" class="btn btn-success">Export to Excel</a>
+            <a href="{{ route('admin.audit-logs.export.pdf') }}" class="btn btn-danger">Export to PDF</a>
+        </div>
+
+        <table class="table table-bordered">
+            <thead>
                 <tr>
-                    <th class="border p-2">User</th>
-                    <th class="border p-2">Action</th>
-                    <th class="border p-2">Model</th>
-                    <th class="border p-2">Record ID</th>
-                    <th class="border p-2">Date</th>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Model</th>
+                    <th>Item ID</th>
+                    <th style="width: 50%;">Changes</th>
+                    <th>Timestamp</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($logs as $log)
+                @foreach($auditLogs as $log)
                     <tr>
-                        <td class="border p-2">{{ $log->user->name }}</td>
-                        <td class="border p-2">{{ ucfirst($log->action) }}</td>
-                        <td class="border p-2">{{ $log->model }}</td>
-                        <td class="border p-2">{{ $log->model_id }}</td>
-                        <td class="border p-2">{{ $log->created_at }}</td>
+                        <td>{{ $log->id }}</td>
+                        <td>{{ $log->user->name }}</td>
+                        <td>{{ $log->action }}</td>
+                        <td>{{ $log->model }}</td>
+                        <td>{{ $log->item_id }}</td>
+                        <td>
+                            @if ($log->action == 'updated')
+                                <ul class="list-unstyled">
+                                    @foreach($log->new_values as $key => $newValue)
+                                        @php
+                                            $oldValue = $log->old_values[$key] ?? null;
+                                        @endphp
+                                        
+                                        @if ($newValue != $oldValue && (isset($log->old_values[$key]) || !empty($newValue)))
+                                            <li>
+                                                <strong>{{ Illuminate\Support\Str::title(str_replace('_', ' ', $key)) }}:</strong>
+                                                <div>
+                                                    <span class="text-danger"><strong>Old:</strong> {{ $oldValue ?? 'N/A' }}</span>
+                                                    <br>
+                                                    <span class="text-success"><strong>New:</strong> {{ $newValue }}</span>
+                                                </div>
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            @elseif ($log->action == 'created' && !empty($log->new_values))
+                                <strong>New Record Details:</strong>
+                                <ul>
+                                    @foreach($log->new_values as $key => $value)
+                                        <li><strong>{{ Illuminate\Support\Str::title(str_replace('_', ' ', $key)) }}:</strong> {{ $value }}</li>
+                                    @endforeach
+                                </ul>
+                            @elseif ($log->action == 'deleted' && !empty($log->old_values))
+                                <strong>Deleted Record Details:</strong>
+                                <ul>
+                                     @foreach($log->old_values as $key => $value)
+                                        <li><strong>{{ Illuminate\Support\Str::title(str_replace('_', ' ', $key)) }}:</strong> {{ $value }}</li>
+                                    @endforeach
+                                </ul>
+                            @else
+                               No changes to display.
+                            @endif
+                        </td>
+                        <td>{{ $log->created_at }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
-        <div class="mt-4">{{ $logs->links() }}
-
-        </div>
+        {{ $auditLogs->links() }}
     </div>
 @endsection
