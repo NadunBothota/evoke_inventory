@@ -3,12 +3,27 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Models\Item;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        return view('user.dashboard');
+        // Calculate total value of all items
+        $totalValue = Item::sum('value');
+
+        // Calculate total value for each category
+        $categories = Category::with('item')
+            ->withSum('item', 'value')
+            ->get();
+
+        // Get total number of items
+        $totalItems = Item::count();
+
+        // Get total number of categories
+        $totalCategories = Category::count();
+
+        return view('user.dashboard', compact('totalValue', 'categories', 'totalItems', 'totalCategories'));
     }
 }

@@ -175,7 +175,7 @@ class ItemController extends Controller
             $validated['police_report'] = $request->file('police_report')->store('police-reports', 'public');
         }
         
-        if ($item->category_id !== $validated['category_id']) {
+        if ($item->category_id !== (int)$validated['category_id']) {
             $category = Category::findOrFail($validated['category_id']);
             $prefix = trim(implode('/', array_filter([$category->ref_group, $category->ref_code])));
 
