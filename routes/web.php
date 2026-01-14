@@ -95,7 +95,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 // Audit Controller
 //------------------------------
 Route::middleware(['auth'])->group(function(){
-    Route::get('/admin/audit-logs', [AuditLogController::class, 'index'])->name('admin.audit.logs');
+    Route::get('/admin/audit-logs', [AuditLogController::class, 'index'])->name('admin.audit-logs.index');
 });
 
 Route::middleware('auth')->group(function () {

@@ -66,7 +66,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.audit.logs') ? 'active' : '' }}" href="{{ route('admin.audit.logs') }}">
+                            <a class="nav-link {{ request()->routeIs('admin.audit-logs.index') ? 'active' : '' }}" href="{{ route('admin.audit-logs.index') }}">
                                 <i class="bi bi-file-earmark-text"></i>
                                 Audit Logs
                             </a>
