@@ -1,133 +1,106 @@
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Inventory Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #f8f9fa;
-        }
-        .navbar {
-            padding: 1rem 2rem;
-            background-color: #fff;
-            border-bottom: 1px solid #dee2e6;
-        }
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-        }
-        .hero-section {
-            padding: 5rem 2rem;
-            text-align: center;
-            background-color: #fff;
-        }
-        .hero-section h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-        .hero-section p {
-            font-size: 1.25rem;
-            color: #6c757d;
-            margin-bottom: 2rem;
-        }
-        .features-section {
-            padding: 5rem 2rem;
-        }
-        .feature-card {
-            border: none;
-            border-radius: 0.5rem;
-            padding: 2rem;
-            text-align: center;
-            background-color: #fff;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s;
-        }
-        .feature-card:hover {
-            transform: translateY(-0.5rem);
-        }
-        .footer {
-            padding: 2rem;
-            text-align: center;
-            background-color: #343a40;
-            color: #fff;
-        }
-    </style>
+    <title>Evoke Inventory</title>
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
+<body class="bg-light">
 
-<nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">InventoryPro</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
-                @if (Route::has('login'))
-                    @auth
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/dashboard') }}">Dashboard</a>
-                        </li>
-                    @else
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">Log in</a>
-                        </li>
-                        @if (Route::has('register'))
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                Evoke Inventory
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    @if (Route::has('login'))
+                        @auth
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">Register</a>
+                                <a href="{{ url('/dashboard') }}" class="nav-link">Dashboard</a>
                             </li>
-                        @endif
-                    @endauth
-                @endif
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<section class="hero-section">
-    <div class="container">
-        <h1>Streamline Your Inventory Management</h1>
-        <p>A powerful and intuitive system to manage your products, track stock levels, and boost your business efficiency.</p>
-        <a href="{{ route('register') }}" class="btn btn-primary btn-lg">Get Started</a>
-    </div>
-section>
-
-<section class="features-section">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="feature-card">
-                    <h3>Real-Time Tracking</h3>
-                    <p>Monitor your inventory levels in real-time to prevent stockouts and overstocking.</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="feature-card">
-                    <h3>Automated Reporting</h3>
-                    <p>Generate insightful reports to make data-driven decisions and optimize your operations.</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="feature-card">
-                    <h3>User-Friendly Interface</h3>
-                    <p>An intuitive and easy-to-use interface that requires minimal training for your team.</p>
-                </div>
+                        @else
+                            <li class="nav-item">
+                                <a href="{{ route('login') }}" class="nav-link">Log in</a>
+                            </li>
+                            @if (Route::has('register'))
+                                <li class="nav-item">
+                                    <a href="{{ route('register') }}" class="btn btn-primary ms-2">Register</a>
+                                </li>
+                            @endif
+                        @endauth
+                    @endif
+                </ul>
             </div>
         </div>
-    </div>
-</section>
+    </nav>
 
-<footer class="footer">
-    <div class="container">
-        <p>&copy; 2024 InventoryPro. All rights reserved.</p>
-    </div>
-</footer>
+    <!-- Hero Section -->
+    <main>
+        <section class="py-5 text-center container">
+            <div class="row py-lg-5">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <h1 class="fw-light">Modern Inventory Management</h1>
+                    <p class="lead text-muted">
+                        Evoke Inventory provides a powerful and intuitive platform to track your assets, manage stock, and optimize your workflow with ease.
+                    </p>
+                    <p>
+                        <a href="{{ route('register') }}" class="btn btn-primary my-2">Get Started</a>
+                        <a href="#features" class="btn btn-secondary my-2">Learn More</a>
+                    </p>
+                </div>
+            </div>
+        </section>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Features Section -->
+        <div id="features" class="album py-5 bg-white">
+            <div class="container">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="card-body text-center">
+                                <h3 class="card-title">Real-Time Tracking</h3>
+                                <p class="card-text">Monitor your inventory levels live, preventing stockouts and overstocking before they happen.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="card-body text-center">
+                                <h3 class="card-title">Insightful Reporting</h3>
+                                <p class="card-text">Generate data-driven reports to make smart decisions and optimize your business operations.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="card-body text-center">
+                                <h3 class="card-title">Intuitive Interface</h3>
+                                <p class="card-text">A clean, user-friendly interface that requires minimal training for your entire team.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-muted py-5">
+        <div class="container">
+            <p class="float-end mb-1">
+                <a href="#">Back to top</a>
+            </p>
+            <p class="mb-1">&copy; {{ date('Y') }} Evoke International. All rights reserved.</p>
+        </div>
+    </footer>
+
 </body>
 </html>
