@@ -1,7 +1,6 @@
-
 <section>
     <header>
-        <h5>
+        <h5 class="card-title">
             {{ __('Update Password') }}
         </h5>
 
@@ -10,39 +9,39 @@
         </p>
     </header>
 
-    <form method="post" action="{{ route('password.update') }}">
+    <form method="post" action="{{ route('password.update') }}" class="mt-4">
         @csrf
         @method('put')
 
         <div class="mb-3">
             <label for="update_password_current_password" class="form-label">{{ __('Current Password') }}</label>
-            <input type="password" class="form-control" id="update_password_current_password" name="current_password" autocomplete="current-password">
-            <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
+            <input type="password" class="form-control" name="current_password" id="update_password_current_password" autocomplete="current-password">
+             @error('current_password', 'updatePassword')
+                <div class="text-danger mt-2">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="mb-3">
             <label for="update_password_password" class="form-label">{{ __('New Password') }}</label>
-            <input type="password" class="form-control" id="update_password_password" name="password" autocomplete="new-password">
-            <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
+            <input type="password" class="form-control" name="password" id="update_password_password" autocomplete="new-password">
+             @error('password', 'updatePassword')
+                <div class="text-danger mt-2">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="mb-3">
             <label for="update_password_password_confirmation" class="form-label">{{ __('Confirm Password') }}</label>
-            <input type="password" class="form-control" id="update_password_password_confirmation" name="password_confirmation" autocomplete="new-password">
-            <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
+            <input type="password" class="form-control" name="password_confirmation" id="update_password_password_confirmation" autocomplete="new-password">
+             @error('password_confirmation', 'updatePassword')
+                <div class="text-danger mt-2">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="d-flex align-items-center">
             <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
 
             @if (session('status') === 'password-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="ms-3 text-sm text-muted"
-                >{{ __('Saved.') }}</p>
+                <p class="ms-3 text-muted">{{ __('Saved.') }}</p>
             @endif
         </div>
     </form>

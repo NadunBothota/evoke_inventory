@@ -1,7 +1,6 @@
-
 <section>
     <header>
-        <h5>
+        <h5 class="card-title">
             {{ __('Profile Information') }}
         </h5>
 
@@ -14,24 +13,28 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-4">
         @csrf
         @method('patch')
 
         <div class="mb-3">
             <label for="name" class="form-label">{{ __('Name') }}</label>
-            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $user->name) }}" required autofocus autocomplete="name">
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+            <input type="text" class="form-control" name="name" id="name" value="{{ old('name', $user->name) }}" required autofocus autocomplete="name">
+            @error('name')
+                <div class="text-danger mt-2">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="mb-3">
             <label for="email" class="form-label">{{ __('Email') }}</label>
-            <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $user->email) }}" required autocomplete="username">
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+            <input type="email" class="form-control" name="email" id="email" value="{{ old('email', $user->email) }}" required autocomplete="username">
+             @error('email')
+                <div class="text-danger mt-2">{{ $message }}</div>
+            @enderror
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                <div>
-                    <p class="mt-2 text-muted">
+                <div class="mt-2">
+                    <p class="text-muted">
                         {{ __('Your email address is unverified.') }}
 
                         <button form="send-verification" class="btn btn-link p-0 m-0 align-baseline">
@@ -40,7 +43,7 @@
                     </p>
 
                     @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 fw-medium text-sm text-success">
+                        <p class="mt-2 fw-bold text-success">
                             {{ __('A new verification link has been sent to your email address.') }}
                         </p>
                     @endif
@@ -52,13 +55,7 @@
             <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
 
             @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="ms-3 text-sm text-muted"
-                >{{ __('Saved.') }}</p>
+                <p class="ms-3 text-muted">{{ __('Saved.') }}</p>
             @endif
         </div>
     </form>

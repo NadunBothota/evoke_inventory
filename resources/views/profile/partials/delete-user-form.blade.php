@@ -1,7 +1,6 @@
-
 <section>
     <header>
-        <h5>
+        <h5 class="card-title">
             {{ __('Delete Account') }}
         </h5>
 
@@ -32,9 +31,11 @@
                         </p>
 
                         <div class="mb-3">
-                            <label for="password" class="form-label visually-hidden">{{ __('Password') }}</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="{{ __('Password') }}">
-                            <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
+                            <label for="password_delete" class="form-label visually-hidden">{{ __('Password') }}</label>
+                            <input type="password" class="form-control" name="password" id="password_delete" placeholder="{{ __('Password') }}">
+                            @error('password', 'userDeletion')
+                                <div class="text-danger mt-2">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
