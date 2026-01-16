@@ -66,11 +66,47 @@ class AuditLogController extends Controller
         return Excel::download(new AuditLogsExport, 'audit-logs.xlsx');
     }
 
-    public function exportPdf()
+    public function exportPdf(Request $request)
     {
-        // Note: This export should also be updated to use filters in a real-world scenario
-        $auditLogs = AuditLog::with('user')->latest()->get();
-        $pdf = Pdf::loadView('exports.audit-logs-pdf', compact('auditLogs'));
-        return $pdf->download('audit-logs.pdf');
+        $query = AuditLog::with(['user', 'item.category'])->latest();
+
+        // Apply filters from the request
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('action', 'like', "%{$searchTerm}%")
+                  ->orWhere('model', 'like', "%{$searchTerm}%")
+                  ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
+                      $userQuery->where('name', 'like', "%{$searchTerm}%");
+                  })
+                  ->orWhere('new_values', 'like', "%{$searchTerm}%")
+                  ->orWhere('old_values', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->input('user_id'));
+        }
+
+        if ($request->filled('action')) {
+            $query->where('action', $request->input('action'));
+        }
+
+        if ($request->filled('date')) {
+            $query->whereDate('created_at', $request->input('date'));
+        }
+
+        $auditLogs = $query->get();
+
+        $data = [
+            'auditLogs' => $auditLogs,
+            'companyName' => 'Evoke International (Pvt) Ltd',
+            'companyAddress' => 'No 123, Colombo, Sri Lanka',
+            'companyPhone' => '+94 11 123 4567',
+            'companyEmail' => 'info@evotech.lk',
+        ];
+
+        $pdf = Pdf::loadView('exports.audit-logs-pdf', $data);
+        return $pdf->download('Audit-Logs-Export-' . now()->format('Y-m-d') . '.pdf');
     }
 }

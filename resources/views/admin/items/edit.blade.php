@@ -82,28 +82,30 @@
                             @endif
                             @if ($item->police_report)
                                 <p class="mt-2"><a href="{{ asset('storage/' . $item->police_report) }}" target="_blank">View Current Report</a></p>
+                                @if(!$readonly)
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="remove_police_report" id="remove_police_report">
+                                    <label class="form-check-label" for="remove_police_report">
+                                        Remove Police Report
+                                    </label>
+                                </div>
+                                @endif
                             @endif
                         </div>
-                        <div class="mb-3">
+                         <div class="mb-3">
                             <label for="photo" class="form-label">Item Photo</label>
                             @if(!$readonly)
                                 <input type="file" class="form-control" name="photo" id="photo" accept=".jpg,.jpeg,.png">
                             @endif
                             @if ($item->photo)
-                                <div class="mt-2">
-                                    <img src="{{ asset('storage/' . $item->photo) }}" class="img-thumbnail" style="width: 150px;">
-                                    <div class="form-check mt-2">
-                                        <input class="form-check-input" type="checkbox" name="remove_photo" id="remove_photo" value="1">
-                                        <label class="form-check-label" for="remove_photo">Remove Photo</label>
-                                    </div>
-                                </div>
+                                <img src="{{ asset('storage/' . $item->photo) }}" class="img-thumbnail mt-2" style="width: 150px;">
                             @endif
                         </div>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="comment" class="form-label">Comment</label>
-                    <textarea class="form-control" name="comment" id="comment" rows="3" {{ $readonly ? 'disabled' : '' }}>{{ old('comment') }}</textarea>
+                    <textarea class="form-control" name="comment" id="comment" rows="3" {{ $readonly ? 'disabled' : '' }}>{{ old('comment', $item->comment) }}</textarea>
                 </div>
 
                 <div class="d-flex justify-content-end">

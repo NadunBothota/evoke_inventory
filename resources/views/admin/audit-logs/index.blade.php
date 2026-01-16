@@ -113,7 +113,7 @@
                                        <span class="text-muted small">No changes to display.</span>
                                     @endif
                                 </td>
-                                <td>{{ $log->created_at->format('Y-m-d H:i') }}</td>
+                                <td>{{ $log->created_at->format('Y-m-d') }}</td>
                             </tr>
                         @empty
                             <tr>

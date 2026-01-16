@@ -8,7 +8,6 @@ use App\Models\AuditLog;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\User;
-use App\Models\Comment;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +58,7 @@ class ItemController extends Controller
         $items = $itemsQuery->get();
         $totalItems = $items->count();
         $totalValue = $items->sum('value');
+
         return view('admin.items.index', compact('items', 'totalItems', 'totalValue'));
     }
 
@@ -76,10 +76,10 @@ class ItemController extends Controller
 
         $validated = $request->validate([
             'serial_number' => 'required|unique:items,serial_number',
-            'item_user' => 'nullable|string',
+            'item_user' => 'required|string',
             'device_name' => 'required|string',
             'department' => 'required|string',
-            'value' => 'nullable|numeric',
+            'value' => 'required|numeric',
             'status' => 'required|in:working,not_working,misplaced',
             'category_id' => 'required|exists:categories,id',
             'photo' => 'nullable|image|max:2048',
@@ -120,21 +120,10 @@ class ItemController extends Controller
         if ($request->hasFile('police_report')) {
             $validated['police_report'] = $request->file('police_report')->store('police-reports', 'public');
         }
-        
-        $commentText = $validated['comment'] ?? null;
-        unset($validated['comment']);
 
         $item = Item::create($validated);
 
-        if (!empty($commentText)) {
-            $comment = new Comment();
-            $comment->item_id = $item->id;
-            $comment->user_id = Auth::id();
-            $comment->body = $commentText;
-            $comment->save();
-        }
-
-        $auditLog = new AuditLog();
+        $auditLog = new Auditlog();
         $auditLog->user_id = Auth::id();
         $auditLog->item_id = $item->id;
         $auditLog->action = 'created';
@@ -173,7 +162,6 @@ class ItemController extends Controller
             'photo' => 'nullable|image|max:2048',
             'comment' => 'nullable|string',
             'police_report' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
-            'remove_photo' => 'nullable|boolean',
         ]);
 
         if ($request->hasFile('photo')) {
@@ -181,21 +169,20 @@ class ItemController extends Controller
                 Storage::disk('public')->delete($item->photo);
             }
             $validated['photo'] = $request->file('photo')->store('item_photos', 'public');
-        } elseif ($request->input('remove_photo')) {
-            if ($item->photo) {
-                Storage::disk('public')->delete($item->photo);
-                $validated['photo'] = null;
-            }
         }
 
-
-        if ($request->hasFile('police_report')) {
+        if ($request->boolean('remove_police_report')) {
+            if ($item->police_report) {
+                Storage::disk('public')->delete($item->police_report);
+            }
+            $validated['police_report'] = null;
+        } elseif ($request->hasFile('police_report')) {
             if ($item->police_report) {
                 Storage::disk('public')->delete($item->police_report);
             }
             $validated['police_report'] = $request->file('police_report')->store('police-reports', 'public');
         }
-        
+
         if ($item->category_id !== (int)$validated['category_id']) {
             $category = Category::findOrFail($validated['category_id']);
             $prefix = trim(implode('/', array_filter([$category->ref_group, $category->ref_code])));
@@ -224,20 +211,10 @@ class ItemController extends Controller
             $validated['reference_number'] = $prefix . '-' . $nextNumber;
         }
 
-        $commentText = $validated['comment'] ?? null;
-        unset($validated['comment']);
 
         $item->update($validated);
 
-        if (!empty($commentText)) {
-            $comment = new Comment();
-            $comment->item_id = $item->id;
-            $comment->user_id = Auth::id();
-            $comment->body = $commentText;
-            $comment->save();
-        }
-
-        $auditLog = new AuditLog();
+        $auditLog = new Auditlog();
         $auditLog->user_id = Auth::id();
         $auditLog->item_id = $item->id;
         $auditLog->action = 'updated';
@@ -266,7 +243,7 @@ class ItemController extends Controller
 
         $item->delete();
 
-        $auditLog = new AuditLog();
+        $auditLog = new Auditlog();
         $auditLog->user_id = Auth::id();
         $auditLog->item_id = $item->id;
         $auditLog->action = 'deleted';
@@ -282,7 +259,6 @@ class ItemController extends Controller
 
     public function show(Item $item)
     {
-        $item->load(['comment' => fn($q) => $q->latest()]);
         return view('admin.items.show', compact('item'));
     }
 
@@ -323,8 +299,19 @@ class ItemController extends Controller
         }
 
         $items = $itemsQuery->get();
-        $pdf = PDF::loadView('exports.items-pdf', compact('items'));
+        $totalValue = $items->sum('value');
 
-        return $pdf->download('items.pdf');
+        $data = [
+            'items' => $items,
+            'totalValue' => $totalValue,
+            'companyName' => 'Evoke International (Pvt) Ltd',
+            'companyAddress' => 'No 123, Colombo, Sri Lanka',
+            'companyPhone' => '+94 11 123 4567',
+            'companyEmail' => 'info@evotech.lk',
+        ];
+
+        $pdf = PDF::loadView('exports.items-pdf', $data);
+
+        return $pdf->download('Items-Export-' . now()->format('Y-m-d') . '.pdf');
     }
 }
