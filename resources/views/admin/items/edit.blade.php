@@ -43,7 +43,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="item_user" class="form-label">Item User</label>
-                            <input type="text" class="form-control" name="item_user" id="item_user" value="{{ old('item_user', $item->item_user) }}" {{ $readonly ? 'disabled' : 'required' }}>
+                            <input type="text" class="form-control" name="item_user" id="item_user" value="{{ old('item_user', $item->item_user) }}" {{ $readonly ? 'disabled' : '' }}>
                         </div>
                         <div class="mb-3">
                             <label for="department" class="form-label">Department</label>
@@ -65,7 +65,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="value" class="form-label">Item Value ($)</label>
-                            <input type="number" step="0.01" class="form-control" name="value" id="value" value="{{ old('value', $item->value) }}" {{ $readonly ? 'disabled' : 'required' }}>
+                            <input type="number" step="0.01" class="form-control" name="value" id="value" value="{{ old('value', $item->value) }}" {{ $readonly ? 'disabled' : '' }}>
                         </div>
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
@@ -84,20 +84,26 @@
                                 <p class="mt-2"><a href="{{ asset('storage/' . $item->police_report) }}" target="_blank">View Current Report</a></p>
                             @endif
                         </div>
-                         <div class="mb-3">
+                        <div class="mb-3">
                             <label for="photo" class="form-label">Item Photo</label>
                             @if(!$readonly)
                                 <input type="file" class="form-control" name="photo" id="photo" accept=".jpg,.jpeg,.png">
                             @endif
                             @if ($item->photo)
-                                <img src="{{ asset('storage/' . $item->photo) }}" class="img-thumbnail mt-2" style="width: 150px;">
+                                <div class="mt-2">
+                                    <img src="{{ asset('storage/' . $item->photo) }}" class="img-thumbnail" style="width: 150px;">
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" name="remove_photo" id="remove_photo" value="1">
+                                        <label class="form-check-label" for="remove_photo">Remove Photo</label>
+                                    </div>
+                                </div>
                             @endif
                         </div>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="comment" class="form-label">Comment</label>
-                    <textarea class="form-control" name="comment" id="comment" rows="3" {{ $readonly ? 'disabled' : '' }}>{{ old('comment', $item->comment) }}</textarea>
+                    <textarea class="form-control" name="comment" id="comment" rows="3" {{ $readonly ? 'disabled' : '' }}>{{ old('comment') }}</textarea>
                 </div>
 
                 <div class="d-flex justify-content-end">

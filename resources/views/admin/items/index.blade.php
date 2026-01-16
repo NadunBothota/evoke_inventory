@@ -13,6 +13,25 @@
         @endif
     </div>
 
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Total Items</h5>
+                    <p class="card-text display-4">{{ $totalItems }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Total Value</h5>
+                    <p class="card-text display-4">Rs.{{ number_format($totalValue, 2) }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card mb-4">
         <div class="card-header">
             Filters
@@ -95,14 +114,14 @@
                             </thead>
                             <tbody>
                                 @foreach($itemsInCategory as $item)
-                                    <tr>
+                                    <tr class="clickable-row" data-href="{{ route('admin.items.show', $item) }}" style="cursor: pointer;">
                                         <td>{{ $itemNumber++ }}</td>
                                         <td>{{ $item->serial_number }}</td>
                                         <td>{{ $item->item_user }}</td>
                                         <td>{{ $item->device_name }}</td>
                                         <td>{{ $item->department }}</td>
                                         <td>{{ $item->reference_number }}</td>
-                                        <td>{{ $item->value > 0 ? '$'.number_format($item->value, 2) : '-' }}</td>
+                                        <td>{{ $item->value > 0 ? 'Rs.'.number_format($item->value, 2) : '-' }}</td>
                                         <td>
                                             @php
                                                 $statusClass = match($item->status) {
@@ -114,7 +133,7 @@
                                             @endphp
                                             <span class="badge bg-{{ $statusClass }}">{{ ucfirst(str_replace('_', ' ', $item->status)) }}</span>
                                         </td>
-                                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $item->comment }}</td>
+                                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $item->comments?->sortByDesc('created_at')->first()?->body ?? '' }}</td>
                                         @if(in_array(auth()->user()->role, ['admin', 'super_admin']))
                                             <td>
                                                 <a href="{{ route('admin.items.edit', $item) }}" class="btn btn-sm btn-primary">Edit</a>
@@ -134,4 +153,16 @@
             </div>
         @endforeach
     @endif
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const rows = document.querySelectorAll('.clickable-row');
+        rows.forEach(row => {
+            row.addEventListener('click', () => {
+                window.location.href = row.dataset.href;
+            });
+        });
+    });
+</script>
+
 @endsection

@@ -47,7 +47,7 @@
                     <td>{{ $item->device_name }}</td>
                     <td>{{ $item->department }}</td>
                     <td>{{ $item->reference_number }}</td>
-                    <td>{{ $item->value }}</td>
+                    <td>{{ $item->value > 0 ? 'Rs.'.number_format($item->value, 2) : '-' }}</td>
                     <td>{{ $item->status }}</td>
                     <td>{{ $item->category->name }}</td>
                 </tr>
