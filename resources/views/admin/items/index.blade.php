@@ -97,12 +97,12 @@
                                 @foreach($itemsInCategory as $item)
                                     <tr>
                                         <td>{{ $itemNumber++ }}</td>
-                                        <td>{{ $item->serial_number }}</td>
+                                        <td><a href="{{ route('admin.items.show', $item) }}" style="text-decoration: none; color: inherit;">{{ $item->serial_number }}</a></td>
                                         <td>{{ $item->item_user }}</td>
                                         <td>{{ $item->device_name }}</td>
                                         <td>{{ $item->department }}</td>
                                         <td>{{ $item->reference_number }}</td>
-                                        <td>{{ $item->value > 0 ? '$'.number_format($item->value, 2) : '-' }}</td>
+                                        <td>{{ $item->value > 0 ? 'Rs.'.number_format($item->value, 2) : '-' }}</td>
                                         <td>
                                             @php
                                                 $statusClass = match($item->status) {
@@ -114,7 +114,11 @@
                                             @endphp
                                             <span class="badge bg-{{ $statusClass }}">{{ ucfirst(str_replace('_', ' ', $item->status)) }}</span>
                                         </td>
-                                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $item->comment }}</td>
+                                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            @if($item->comments->isNotEmpty())
+                                                {{ $item->comments->first()->comment }}
+                                            @endif
+                                        </td>
                                         @if(in_array(auth()->user()->role, ['admin', 'super_admin']))
                                             <td>
                                                 <a href="{{ route('admin.items.edit', $item) }}" class="btn btn-sm btn-primary">Edit</a>

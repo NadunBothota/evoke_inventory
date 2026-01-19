@@ -42,7 +42,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="item_user" class="form-label">Item User</label>
-                            <input type="text" class="form-control" name="item_user" id="item_user" value="{{ old('item_user') }}" {{ $readonly ? 'disabled' : 'required' }}>
+                            <input type="text" class="form-control" name="item_user" id="item_user" value="{{ old('item_user') }}" {{ $readonly ? 'disabled' : '' }}>
                         </div>
                         <div class="mb-3">
                             <label for="department" class="form-label">Department</label>
@@ -61,7 +61,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="value" class="form-label">Item Value ($)</label>
-                            <input type="number" step="0.01" class="form-control" name="value" id="value" value="{{ old('value') }}" {{ $readonly ? 'disabled' : 'required' }}>
+                            <input type="number" step="0.01" class="form-control" name="value" id="value" value="{{ old('value') }}" {{ $readonly ? 'disabled' : '' }}>
                         </div>
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>

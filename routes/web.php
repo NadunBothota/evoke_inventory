@@ -50,6 +50,7 @@ Route::middleware(['auth', 'role:super_admin,admin'])->group(function () {
     Route::get('/admin/items/{item}/edit', [ItemController::class, 'edit'])->name('admin.items.edit');
     Route::put('/admin/items/{item}', [ItemController::class, 'update'])->name('admin.items.update');
     Route::delete('/admin/items/{item}', [ItemController::class, 'destroy'])->name('admin.items.destroy');
+    Route::get('/admin/items/{item}', [ItemController::class, 'show'])->name('admin.items.show'); // Moved from user routes
 
     // Export Routes
     Route::get('/admin/items/export/excel', [ItemController::class, 'exportExcel'])->name('admin.items.export.excel');

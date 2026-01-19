@@ -11,6 +11,7 @@ class Comment extends Model
 
     protected $fillable = [
         'item_id',
+        'user_id',
         'comment',
         'police_report',
         'report_file',
@@ -19,5 +20,10 @@ class Comment extends Model
     public function item()
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
