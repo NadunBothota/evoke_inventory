@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Item;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -25,6 +26,27 @@ class DashboardController extends Controller
         // Get total number of categories
         $totalCategories = Category::count();
 
-        return view('admin.dashboard', compact('totalValue', 'categories', 'totalItems', 'totalCategories'));
+        $categoryValueNames = $categories->pluck('name');
+        $categoryValues = $categories->pluck('item_sum_value');
+
+        $categoryNames = $categories->pluck('name');
+        $workingItems = $categories->map(function ($category) {
+            return $category->item()->where('status', 'working')->count();
+        });
+        $notWorkingItems = $categories->map(function ($category) {
+            return $category->item()->where('status', 'not_working')->count();
+        });
+
+        return view('admin.dashboard', compact(
+            'totalValue', 
+            'categories', 
+            'totalItems', 
+            'totalCategories', 
+            'categoryValueNames', 
+            'categoryValues',
+            'categoryNames',
+            'workingItems',
+            'notWorkingItems'
+        ));
     }
 }

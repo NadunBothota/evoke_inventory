@@ -77,10 +77,10 @@ class ItemController extends Controller
 
         $validated = $request->validate([
             'serial_number' => 'required|unique:items,serial_number',
-            'item_user' => 'required|string',
+            'item_user' => 'nullable|string',
             'device_name' => 'required|string',
             'department' => 'required|string',
-            'value' => 'required|numeric',
+            'value' => 'nullable|numeric',
             'status' => 'required|in:working,not_working,misplaced',
             'category_id' => 'required|exists:categories,id',
             'photo' => 'nullable|image|max:2048',

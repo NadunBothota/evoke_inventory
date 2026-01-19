@@ -24,6 +24,28 @@ class DashboardController extends Controller
         // Get total number of categories
         $totalCategories = Category::count();
 
-        return view('user.dashboard', compact('totalValue', 'categories', 'totalItems', 'totalCategories'));
+        // Data for charts
+        $categoryValueNames = $categories->pluck('name');
+        $categoryValues = $categories->pluck('item_sum_value');
+        
+        $categoryNames = $categories->pluck('name');
+        $workingItems = $categories->map(function ($category) {
+            return $category->item()->where('status', 'working')->count();
+        });
+        $notWorkingItems = $categories->map(function ($category) {
+            return $category->item()->where('status', 'not_working')->count();
+        });
+
+        return view('user.dashboard', compact(
+            'totalValue', 
+            'categories', 
+            'totalItems', 
+            'totalCategories', 
+            'categoryValueNames', 
+            'categoryValues', 
+            'categoryNames', 
+            'workingItems', 
+            'notWorkingItems'
+        ));
     }
 }
