@@ -104,7 +104,7 @@
 
         <div style="margin-top: 20px; font-size: 12px;">
             <strong>Total Items:</strong> {{ $items->count() }}<br>
-            <strong>Total Value:</strong> ${{ number_format($totalValue, 2) }}
+            <strong>Total Value:</strong> Rs.{{ number_format($totalValue, 2) }}
         </div>
     </div>
 

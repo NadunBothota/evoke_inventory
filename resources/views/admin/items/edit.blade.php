@@ -64,7 +64,7 @@
                             <input type="text" class="form-control" name="reference_number" id="reference_number" value="{{ old('reference_number', $item->reference_number) }}" readonly>
                         </div>
                         <div class="mb-3">
-                            <label for="value" class="form-label">Item Value ($)</label>
+                            <label for="value" class="form-label">Item Value (Rs.)</label>
                             <input type="number" step="0.01" class="form-control" name="value" id="value" value="{{ old('value', $item->value) }}" {{ $readonly ? 'disabled' : '' }}>
                         </div>
                         <div class="mb-3">
@@ -104,9 +104,10 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="comment" class="form-label">Comment</label>
-                    <textarea class="form-control" name="comment" id="comment" rows="3" {{ $readonly ? 'disabled' : '' }}>{{ old('comment', $item->comment) }}</textarea>
-                </div>
+    <label for="comment" class="form-label">Comment</label>
+    <textarea class="form-control" name="comment" id="comment" rows="3" {{ $readonly ? 'disabled' : '' }}>{{ old('comment', optional($item->comments->first())->comment) }}</textarea>
+</div>
+
 
                 <div class="d-flex justify-content-end">
                     <a href="{{ route('admin.items.index') }}" class="btn btn-secondary me-2">Back</a>

@@ -13,25 +13,6 @@
         @endif
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Total Items</h5>
-                    <p class="card-text display-4">{{ $totalItems }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Total Value</h5>
-                    <p class="card-text display-4">Rs.{{ number_format($totalValue, 2) }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="card mb-4">
         <div class="card-header">
             Filters
@@ -114,9 +95,9 @@
                             </thead>
                             <tbody>
                                 @foreach($itemsInCategory as $item)
-                                    <tr class="clickable-row" data-href="{{ route('admin.items.show', $item) }}" style="cursor: pointer;">
+                                    <tr>
                                         <td>{{ $itemNumber++ }}</td>
-                                        <td>{{ $item->serial_number }}</td>
+                                        <td><a href="{{ route('admin.items.show', $item) }}" style="text-decoration: none; color: inherit;">{{ $item->serial_number }}</a></td>
                                         <td>{{ $item->item_user }}</td>
                                         <td>{{ $item->device_name }}</td>
                                         <td>{{ $item->department }}</td>
@@ -133,7 +114,11 @@
                                             @endphp
                                             <span class="badge bg-{{ $statusClass }}">{{ ucfirst(str_replace('_', ' ', $item->status)) }}</span>
                                         </td>
-                                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $item->comments?->sortByDesc('created_at')->first()?->body ?? '' }}</td>
+                                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            @if($item->comments->isNotEmpty())
+                                                {{ $item->comments->first()->comment }}
+                                            @endif
+                                        </td>
                                         @if(in_array(auth()->user()->role, ['admin', 'super_admin']))
                                             <td>
                                                 <a href="{{ route('admin.items.edit', $item) }}" class="btn btn-sm btn-primary">Edit</a>
@@ -153,16 +138,4 @@
             </div>
         @endforeach
     @endif
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const rows = document.querySelectorAll('.clickable-row');
-        rows.forEach(row => {
-            row.addEventListener('click', () => {
-                window.location.href = row.dataset.href;
-            });
-        });
-    });
-</script>
-
 @endsection

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Exports\ItemsExport;
 use App\Models\AuditLog;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Item;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -29,7 +30,7 @@ class ItemController extends Controller
 
     public function index(Request $request)
     {
-        $itemsQuery = Item::with('category')->orderBy('category_id');
+        $itemsQuery = Item::with('category', 'comments')->orderBy('category_id');
 
         if ($request->filled('category')) {
             $itemsQuery->where('category_id', $request->category);
@@ -121,6 +122,12 @@ class ItemController extends Controller
             $validated['police_report'] = $request->file('police_report')->store('police-reports', 'public');
         }
 
+        $commentText = null;
+        if (!empty($validated['comment'])) {
+            $commentText = $validated['comment'];
+            unset($validated['comment']);
+        }
+
         $item = Item::create($validated);
 
         $auditLog = new Auditlog();
@@ -132,6 +139,22 @@ class ItemController extends Controller
         $auditLog->new_values = $item->toArray();
         $auditLog->save();
 
+        if ($commentText) {
+            $comment = $item->comments()->create([
+                'comment' => $commentText,
+                'user_id' => Auth::id(),
+            ]);
+
+            $commentAuditLog = new AuditLog();
+            $commentAuditLog->user_id = Auth::id();
+            $commentAuditLog->item_id = $item->id;
+            $commentAuditLog->action = 'created';
+            $commentAuditLog->model = 'Comment';
+            $commentAuditLog->old_values = null;
+            $commentAuditLog->new_values = ['comment' => $comment->comment];
+            $commentAuditLog->save();
+        }
+
         return redirect()
             ->route('admin.items.index')
             ->with('success', 'Item added successfully');
@@ -140,7 +163,7 @@ class ItemController extends Controller
     public function edit(Item $item)
     {
         $this->denyReadOnly();
-
+        $item->load('comments');
         $categories = Category::all();
         return view('admin.items.edit', compact('item', 'categories'));
     }
@@ -149,7 +172,7 @@ class ItemController extends Controller
     {
         $this->denyReadOnly();
 
-        $oldValues = $item->toArray();
+        $oldValues = $item->getOriginal();
 
         $validated = $request->validate([
             'serial_number' => 'required|unique:items,serial_number,' . $item->id,
@@ -183,7 +206,27 @@ class ItemController extends Controller
             $validated['police_report'] = $request->file('police_report')->store('police-reports', 'public');
         }
 
-        if ($item->category_id !== (int)$validated['category_id']) {
+        if (!empty($validated['comment'])) {
+            $latestComment = $item->comments()->latest()->first();
+            if (!$latestComment || $latestComment->comment !== $validated['comment']) {
+                $comment = $item->comments()->create([
+                    'comment' => $validated['comment'],
+                    'user_id' => Auth::id(),
+                ]);
+
+                $commentAuditLog = new AuditLog();
+                $commentAuditLog->user_id = Auth::id();
+                $commentAuditLog->item_id = $item->id;
+                $commentAuditLog->action = $latestComment ? 'updated' : 'created';
+                $commentAuditLog->model = 'Comment';
+                $commentAuditLog->old_values = $latestComment ? ['comment' => $latestComment->comment] : null;
+                $commentAuditLog->new_values = ['comment' => $comment->comment];
+                $commentAuditLog->save();
+            }
+        }
+        unset($validated['comment']);
+
+        if ($item->category_id !== (int) $validated['category_id']) {
             $category = Category::findOrFail($validated['category_id']);
             $prefix = trim(implode('/', array_filter([$category->ref_group, $category->ref_code])));
 
@@ -211,17 +254,19 @@ class ItemController extends Controller
             $validated['reference_number'] = $prefix . '-' . $nextNumber;
         }
 
-
         $item->update($validated);
+        $itemChanges = $item->getChanges();
 
-        $auditLog = new Auditlog();
-        $auditLog->user_id = Auth::id();
-        $auditLog->item_id = $item->id;
-        $auditLog->action = 'updated';
-        $auditLog->model = 'Item';
-        $auditLog->old_values = $oldValues;
-        $auditLog->new_values = $item->fresh()->toArray();
-        $auditLog->save();
+        if (count($itemChanges) > 0) {
+            $auditLog = new AuditLog();
+            $auditLog->user_id = Auth::id();
+            $auditLog->item_id = $item->id;
+            $auditLog->action = 'updated';
+            $auditLog->model = 'Item';
+            $auditLog->old_values = array_intersect_key($oldValues, $itemChanges);
+            $auditLog->new_values = $itemChanges;
+            $auditLog->save();
+        }
 
         return redirect()
             ->route('admin.items.index')
@@ -259,6 +304,7 @@ class ItemController extends Controller
 
     public function show(Item $item)
     {
+        $item->load('comments.user');
         return view('admin.items.show', compact('item'));
     }
 

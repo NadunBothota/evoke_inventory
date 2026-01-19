@@ -10,7 +10,7 @@
             <div class="card text-white bg-primary mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Total Inventory Value</h5>
-                    <p class="card-text fs-4">${{ number_format($totalValue, 2) }}</p>
+                    <p class="card-text fs-4">Rs.{{ number_format($totalValue, 2) }}</p>
                 </div>
             </div>
         </div>
@@ -51,7 +51,7 @@
                         <tr>
                             <td>{{ $category->name }}</td>
                             <td>{{ $category->item->count() }}</td>
-                            <td>${{ number_format($category->item_sum_value ?? 0, 2) }}</td>
+                            <td>Rs.{{ number_format($category->item_sum_value ?? 0, 2) }}</td>
                         </tr>
                     @empty
                         <tr>
