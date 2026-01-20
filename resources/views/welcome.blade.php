@@ -4,103 +4,134 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Evoke Inventory</title>
-
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
 </head>
-<body class="bg-light">
-
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/">
-                Evoke Inventory
+<body class="landing-page">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+        <div class="container-fluid px-5">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="{{ asset('images/logo_inventory.png') }}" alt="Evoke Inventory" class="me-2">
+                <div class="navbar-brand-text">
+                    <span class="title">Evoke Inventory</span>
+                    <span class="subtitle">Inventory Management System</span>
+                </div>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    @if (Route::has('login'))
-                        @auth
-                            <li class="nav-item">
-                                <a href="{{ url('/dashboard') }}" class="nav-link">Dashboard</a>
-                            </li>
-                        @else
-                            <li class="nav-item">
-                                <a href="{{ route('login') }}" class="nav-link">Log in</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a href="{{ route('register') }}" class="btn btn-primary ms-2">Register</a>
-                                </li>
-                            @endif
-                        @endauth
-                    @endif
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">Log in</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary" href="{{ route('login') }}">Access System</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <main>
-        <section class="py-5 text-center container">
-            <div class="row py-lg-5">
-                <div class="col-lg-6 col-md-8 mx-auto">
-                    <h1 class="fw-light">Modern Inventory Management</h1>
-                    <p class="lead text-muted">
-                        Evoke Inventory provides a powerful and intuitive platform to track your assets, manage stock, and optimize your workflow with ease.
-                    </p>
-                    <p>
-                        <a href="{{ route('register') }}" class="btn btn-primary my-2">Get Started</a>
-                        <a href="#features" class="btn btn-secondary my-2">Learn More</a>
-                    </p>
+        <section class="hero-section">
+            <div class="container">
+                <span class="badge">EVOKE INTERNATIONAL</span>
+                <h1>Inventory Management System</h1>
+                <p>A comprehensive inventory management platform built exclusively for Evoke International. Track, manage, and optimize all company assets with real-time monitoring and reporting.</p>
+                <div>
+                    <a href="#" class="btn btn-primary btn-lg">Get Started</a>
                 </div>
             </div>
         </section>
 
-        <!-- Features Section -->
-        <div id="features" class="album py-5 bg-white">
+        <section class="stats-section text-center py-5">
             <div class="container">
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                    <div class="col">
-                        <div class="card shadow-sm">
-                            <div class="card-body text-center">
-                                <h3 class="card-title">Real-Time Tracking</h3>
-                                <p class="card-text">Monitor your inventory levels live, preventing stockouts and overstocking before they happen.</p>
-                            </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card p-4">
+                            <h2>500+</h2>
+                            <p>Assets Tracked</p>
                         </div>
                     </div>
-                    <div class="col">
-                        <div class="card shadow-sm">
-                            <div class="card-body text-center">
-                                <h3 class="card-title">Insightful Reporting</h3>
-                                <p class="card-text">Generate data-driven reports to make smart decisions and optimize your business operations.</p>
-                            </div>
+                    <div class="col-md-3">
+                        <div class="card p-4">
+                            <h2>7</h2>
+                            <p>Departments</p>
                         </div>
                     </div>
-                    <div class="col">
-                        <div class="card shadow-sm">
-                            <div class="card-body text-center">
-                                <h3 class="card-title">Intuitive Interface</h3>
-                                <p class="card-text">A clean, user-friendly interface that requires minimal training for your entire team.</p>
-                            </div>
+                    <div class="col-md-3">
+                        <div class="card p-4">
+                            <h2>50+</h2>
+                            <p>Active Users</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card p-4">
+                            <h2>99.9%</h2>
+                            <p>Uptime</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <section class="features-section text-center">
+            <div class="container">
+                <h2>System Features</h2>
+                <p class="lead text-muted">Built specifically for Evoke International's operational needs</p>
+                <div class="row mt-5">
+                    <div class="col-md-4">
+                        <div class="card border-orange">
+                            <div class="icon-container bg-orange">
+                                <img src="{{ asset('images/Real-Time Asset Tracking.png') }}" alt="Real-Time Asset Tracking" class="card-icon">
+                            </div>
+                            <h5>Real-Time Asset Tracking</h5>
+                            <p>Monitor all company assets in real-time. Track equipment location, status, and usage across all departments with instant updates.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-dark">
+                            <div class="icon-container bg-gray">
+                                <img src="{{ asset('images/Department Management.png') }}" alt="Department Management" class="card-icon">
+                            </div>
+                            <h5>Department Management</h5>
+                            <p>Organize assets by department with custom workflows. Assign equipment, track usage, and maintain accountability across the organization.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-orange">
+                            <div class="icon-container bg-orange">
+                                <img src="{{ asset('images/User Access Control.png') }}" alt="User Access Control" class="card-icon">
+                            </div>
+                            <h5>User Access Control</h5>
+                            <p>Role-based permissions ensure secure access. Administrators can manage users, assign roles, and control system access levels.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="access-section text-center my-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <img src="https://i.imgur.com/gW8cM5a.png" alt="" height="50">
+                        <h2>Authorized Access Only</h2>
+                        <p>This system is exclusively for Evoke International employees. Please use your company credentials to access the platform.</p>
+                        <a href="{{ route('login') }}" class="btn btn-light btn-lg">Login with Company Account</a>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- Footer -->
-    <footer class="text-muted py-5">
-        <div class="container">
-            <p class="float-end mb-1">
-                <a href="#">Back to top</a>
-            </p>
-            <p class="mb-1">&copy; {{ date('Y') }} Evoke International. All rights reserved.</p>
+    <footer class="py-4">
+        <div class="container d-flex justify-content-between">
+            <div>&copy; 2026 Evoke International. All rights reserved. <br> Internal Use Only - Confidential System</div>
+            <div>
+                <a href="#" class="me-3">Support</a>
+                <a href="#" class="me-3">Documentation</a>
+                <a href="#">Contact IT</a>
+            </div>
         </div>
     </footer>
-
 </body>
 </html>

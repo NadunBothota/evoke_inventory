@@ -1,49 +1,47 @@
 /* import bootstrap */
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
+/* General Body Style */
 body {
     background-color: #f8f9fa;
+    font-family: 'Inter', sans-serif;
 }
 
+/* App-specific Sidebar Styles */
 .sidebar {
-    background-color: #111827; /* Darker, modern background */
+    background-color: #111827;
     color: #f2f2f2;
     min-height: 100vh;
 }
 
-/* Sidebar Title (e.g., "Evoke Inventory") */
 .sidebar .fs-4 {
-    color: #ff6600; /* Orange color for the title */
+    color: #ff6600;
     font-weight: bold;
 }
 
-/* Sidebar navigation links */
 .sidebar .nav-link {
-    color: #d1d5db; /* A light gray for readability */
+    color: #d1d5db;
     font-size: 1rem;
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
 }
 
-/* Hover state for sidebar links */
 .sidebar .nav-link:hover {
     color: #ffffff;
-    background-color: #1f2937; /* A subtle hover effect */
+    background-color: #1f2937;
 }
 
-/* Active sidebar link */
 .sidebar .nav-link.active {
     background-color: #ff6600;
     color: #fff;
     font-weight: 500;
 }
 
-/* The horizontal rule in the sidebar */
 .sidebar hr {
     border-color: rgba(255, 255, 255, 0.1);
 }
 
-
+/* App-specific Stat Card Styles */
 .stat-card {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -56,7 +54,7 @@ body {
     color: #ff6600;
 }
 
-/* Button Styles */
+/* General Button Styles */
 .btn-primary {
     background-color: #ff6600;
     border-color: #ff6600;
@@ -67,60 +65,188 @@ body {
     border-color: #e65c00;
 }
 
-.btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
+/* Isolate Landing Page Styles */
+.landing-page body {
+    background-color: #fff;
+    color: #4a4a4a;
+}
+
+.landing-page .navbar-brand img {
+    height: 40px;
+}
+
+.landing-page .navbar-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.landing-page .navbar-brand-text .title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #111827;
+}
+
+.landing-page .navbar-brand-text .subtitle {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.landing-page .hero-section {
+    padding: 6rem 0;
+    text-align: center;
+    background-color: #f9fafb;
+}
+
+.landing-page .hero-section .badge {
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    background-color: #ffedd5;
+    color: #f97316;
+    border-radius: 0.5rem;
+}
+
+.landing-page .hero-section h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-top: 1.5rem;
+    color: #111827;
+}
+
+.landing-page .hero-section p {
+    font-size: 1.25rem;
+    color: #6b7280;
+    max-width: 650px;
+    margin: 1.5rem auto;
+}
+
+.landing-page .stats-section .card {
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    border-radius: 0.75rem;
+    border-left: 5px solid #ff6600;
+    text-align: left;
+}
+
+.landing-page .stats-section .card h2 {
+    font-weight: 700;
+}
+
+.landing-page .features-section {
+    padding: 6rem 0;
+    background-color: #fff;
+    text-align: center;
+}
+
+.landing-page .features-section h2 {
+    font-weight: 800;
+    color: #111827;
+}
+
+.landing-page .features-section .lead {
+    color: #6b7280;
+}
+
+.landing-page .features-section .card {
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    border-radius: 0.75rem;
+    text-align: left;
+    height: 100%;
+    padding: 2rem;
+    border-left-width: 4px;
+    border-left-style: solid;
+}
+
+.landing-page .features-section .card.border-orange {
+    border-left-color: #f97316;
+}
+
+.landing-page .features-section .card.border-dark {
+    border-left-color: #1f2937;
+}
+
+.landing-page .features-section .icon-container {
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.landing-page .features-section .icon-container.bg-orange {
+    background-color: #ffedd5;
+}
+
+.landing-page .features-section .icon-container.bg-gray {
+    background-color: #f3f4f6;
+}
+
+.landing-page .features-section .card-icon {
+    height: 24px;
+    width: 24px;
+}
+
+.landing-page .features-section .card h5 {
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.landing-page .access-section {
+    background-color: #ff6600;
+    color: #fff;
+    padding: 4rem 0;
+    border-radius: 1rem;
+}
+
+.landing-page .access-section img {
+    margin-bottom: 1rem;
+}
+
+.landing-page footer {
+    padding: 2rem 0;
+    background-color: #111827;
+    color: #9ca3af;
+}
+
+.landing-page footer a {
+    color: #9ca3af;
+    text-decoration: none;
+}
+
+.landing-page footer a:hover {
     color: #fff;
 }
 
-.btn-secondary:hover {
-    background-color: #5a6268;
-    border-color: #545b62;
+/* Login Page Styles */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.btn-success {
-    background-color: transparent;
-    border-color: #198754;
-    color: #198754;
+.login-card {
+    border: none;
+    border-radius: 1rem;
+    padding: 3rem;
+    background-color: #fff;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
 }
 
-.btn-success:hover {
-    background-color: #198754;
-    color: #fff;
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
-.btn-danger {
-    background-color: transparent;
-    border-color: #dc3545;
-    color: #dc3545;
+.login-header h2 {
+    font-weight: 700;
 }
 
-.btn-danger:hover {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-.btn-warning {
-    background-color: transparent;
-    border-color: #ffc107;
-    color: #ffc107;
-}
-
-.btn-warning:hover {
-    background-color: #ffc107;
-    color: #fff;
-}
-
-
-
-/* Badge Styles */
-.badge {
-    font-size: 1em;
-    font-weight: normal;
-    padding: 0;
-}
-
-.bg-success, .bg-danger, .bg-warning, .bg-info, .bg-primary {
-    background-color: transparent !important;
-    color: inherit !important;
+.login-header p {
+    color: #6c757d;
 }
