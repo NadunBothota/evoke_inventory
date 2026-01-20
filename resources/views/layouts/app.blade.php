@@ -10,32 +10,12 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <style>
-        body {
-            font-family: 'Figtree', sans-serif;
-        }
-        .sidebar {
-            min-height: 100vh;
-            background-color: #343a40;
-        }
-        .sidebar .nav-link {
-            color: rgba(255,255,255,.75);
-        }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            color: #fff;
-        }
-        main > .container-fluid {
-            padding-top: 1.5rem;
-            padding-bottom: 1.5rem;
-        }
-    </style>
 </head>
 <body class="bg-light">
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
                 <div class="position-sticky pt-3">
                     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                         <span class="fs-4 px-3">Evoke Inventory</span>

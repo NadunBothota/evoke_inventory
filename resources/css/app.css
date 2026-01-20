@@ -1,2 +1,126 @@
 /* import bootstrap */
 @import 'bootstrap/dist/css/bootstrap.min.css';
+
+body {
+    background-color: #f8f9fa;
+}
+
+.sidebar {
+    background-color: #111827; /* Darker, modern background */
+    color: #f2f2f2;
+    min-height: 100vh;
+}
+
+/* Sidebar Title (e.g., "Evoke Inventory") */
+.sidebar .fs-4 {
+    color: #ff6600; /* Orange color for the title */
+    font-weight: bold;
+}
+
+/* Sidebar navigation links */
+.sidebar .nav-link {
+    color: #d1d5db; /* A light gray for readability */
+    font-size: 1rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+/* Hover state for sidebar links */
+.sidebar .nav-link:hover {
+    color: #ffffff;
+    background-color: #1f2937; /* A subtle hover effect */
+}
+
+/* Active sidebar link */
+.sidebar .nav-link.active {
+    background-color: #ff6600;
+    color: #fff;
+    font-weight: 500;
+}
+
+/* The horizontal rule in the sidebar */
+.sidebar hr {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+
+.stat-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-left: 5px solid #ff6600;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.stat-card h5 {
+    color: #ff6600;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #ff6600;
+    border-color: #ff6600;
+}
+
+.btn-primary:hover {
+    background-color: #e65c00;
+    border-color: #e65c00;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+.btn-success {
+    background-color: transparent;
+    border-color: #198754;
+    color: #198754;
+}
+
+.btn-success:hover {
+    background-color: #198754;
+    color: #fff;
+}
+
+.btn-danger {
+    background-color: transparent;
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-warning {
+    background-color: transparent;
+    border-color: #ffc107;
+    color: #ffc107;
+}
+
+.btn-warning:hover {
+    background-color: #ffc107;
+    color: #fff;
+}
+
+
+
+/* Badge Styles */
+.badge {
+    font-size: 1em;
+    font-weight: normal;
+    padding: 0;
+}
+
+.bg-success, .bg-danger, .bg-warning, .bg-info, .bg-primary {
+    background-color: transparent !important;
+    color: inherit !important;
+}
