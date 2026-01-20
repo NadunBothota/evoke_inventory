@@ -100,7 +100,7 @@ class AuditLogController extends Controller
 
         $data = [
             'auditLogs' => $auditLogs,
-            'companyName' => 'Evoke International (Pvt) Ltd',
+            'companyName' => 'Evoke International Ltd',
             'companyAddress' => 'No 123, Colombo, Sri Lanka',
             'companyPhone' => '+94 11 123 4567',
             'companyEmail' => 'info@evotech.lk',

@@ -350,7 +350,7 @@ class ItemController extends Controller
         $data = [
             'items' => $items,
             'totalValue' => $totalValue,
-            'companyName' => 'Evoke International (Pvt) Ltd',
+            'companyName' => 'Evoke International Ltd',
             'companyAddress' => 'No 123, Colombo, Sri Lanka',
             'companyPhone' => '+94 11 123 4567',
             'companyEmail' => 'info@evotech.lk',

@@ -11,11 +11,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
         <div class="container-fluid px-5">
             <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="{{ asset('images/logo_inventory.png') }}" alt="Evoke Inventory" class="me-2">
-                <div class="navbar-brand-text">
-                    <span class="title">Evoke Inventory</span>
-                    <span class="subtitle">Inventory Management System</span>
-                </div>
+                <img src="{{ asset('images/evoke_logo.jpg') }}" alt="Evoke Inventory" class="me-2">
             </a>
             <div class="collapse navbar-collapse justify-content-end">
                 <ul class="navbar-nav align-items-center">

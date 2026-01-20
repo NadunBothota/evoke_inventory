@@ -25,7 +25,7 @@
                     @forelse ($categories as $category)
                         <tr>
                             <td>{{ $category->id }}</td>
-                            <td><a href="{{ route('admin.items.index', ['category' => $category->id]) }}">{{ $category->name }}</a></td>
+                            <td><a href="{{ route('admin.items.index', ['category' => $category->id]) }}" style="text-decoration: none; color: inherit;">{{ $category->name }}</a></td>
                             @if(in_array(auth()->user()->role, ['admin', 'super_admin']))
                                 <td>
                                     <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-sm btn-primary">Edit</a>
