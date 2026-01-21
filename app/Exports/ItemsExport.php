@@ -5,8 +5,9 @@ namespace App\Exports;
 use App\Models\Item;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class ItemsExport implements FromCollection, WithHeadings
+class ItemsExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $filters;
 
@@ -63,6 +64,29 @@ class ItemsExport implements FromCollection, WithHeadings
             'Police Report',
             'Created At',
             'Updated At',
+        ];
+    }
+
+    /**
+    * @var Item $item
+    */
+    public function map($item): array
+    {
+        return [
+            $item->id,
+            $item->serial_number,
+            $item->item_user,
+            $item->device_name,
+            $item->department,
+            $item->reference_number,
+            $item->value,
+            $item->status,
+            $item->category_id,
+            $item->photo,
+            $item->comment,
+            $item->police_report,
+            $item->created_at->toDateTimeString(),
+            $item->updated_at->toDateTimeString(),
         ];
     }
 }

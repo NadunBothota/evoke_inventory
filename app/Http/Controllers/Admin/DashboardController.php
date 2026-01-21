@@ -56,31 +56,8 @@ class DashboardController extends Controller
     public function downloadPDF()
     {
         // Calculate total value for each category
-        $categories = Category::with('item')
-            ->withSum('item', 'value')
-            ->get();
-        
-        $pdf = PDF::loadView('admin.inventory_pdf', compact('categories'));
-        return $pdf->download('inventory_breakdown.pdf');
-    }
-
-    public function sendDashboardReport()
-    {
-        // Calculate total value for each category
-        $categories = Category::with('item')
-            ->withSum('item', 'value')
-            ->get();
-        
-        $pdf = PDF::loadView('admin.inventory_pdf', compact('categories'))->output();
-
-        $admins = User::whereIn('role', ['admin', 'super_admin'])->get();
-
-        foreach ($admins as $admin) {
-            Mail::to($admin->email)->send(new DashboardReportMail($pdf));
-        }
-
-        return redirect()
-            ->route('admin.dashboard')
-            ->with('success', 'Dashboard report sent to all admins.');
+        $items = Item::all();
+        $pdf = PDF::loadView('admin.inventory_pdf', compact('items'));
+        return $pdf->download('inventory_report.pdf');
     }
 }

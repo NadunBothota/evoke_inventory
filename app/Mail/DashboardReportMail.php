@@ -9,21 +9,28 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Attachment;
+use Illuminate\Support\Collection;
 
 class DashboardReportMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $pdf;
+    public $attachmentData;
+    public $fileName;
+    public $mineType;
+    public $inventoryData;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($pdf)
+    public function __construct($attachmentData, $fileName, $mineType, Collection $inventoryData)
     {
-        $this->pdf = $pdf;
+        $this->attachmentData = $attachmentData;
+        $this->fileName = $fileName;
+        $this->mineType = $mineType;
+        $this->inventoryData = $inventoryData;
     }
 
     /**
@@ -34,7 +41,7 @@ class DashboardReportMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Dashboard Inventory Report',
+            subject: 'Evoke Inventory Summary Report',
         );
     }
 
@@ -46,7 +53,7 @@ class DashboardReportMail extends Mailable
     public function content()
     {
         return new Content(
-            markdown: 'emails.dashboard.report',
+            view: 'emails.inventory_report',
         );
     }
 
@@ -58,8 +65,8 @@ class DashboardReportMail extends Mailable
     public function attachments()
     {
         return [
-            Attachment::fromData(fn () => $this->pdf, 'inventory_breakdown.pdf')
-                ->withMime('application/pdf'),
+            Attachment::fromData(fn () => $this->attachmentData, $this->fileName)
+                ->withMime($this->mineType),
         ];
     }
 }

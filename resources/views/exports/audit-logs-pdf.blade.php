@@ -5,7 +5,7 @@
     <title>Audit Logs Export</title>
     <style>
         body {
-            font-family: 'Times New Roman', serif;
+            font-family: 'Arial', serif;
             color: #333;
         }
         .header {

@@ -7,9 +7,8 @@
 
     <title>{{ config('app.name', 'Evoke Inventory') }}</title>
 
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Styles -->
+    @vite(['resources/css/app.css'])
 </head>
 <body class="{{ request()->routeIs('login') || request()->routeIs('register') ? '' : 'bg-light' }}">
     @guest
@@ -87,5 +86,9 @@
             </div>
         </div>
     @endguest
+
+    <!-- Scripts -->
+    @vite(['resources/js/app.js'])
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>

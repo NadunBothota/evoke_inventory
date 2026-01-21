@@ -59,7 +59,7 @@
     <div class="card mt-4">
         <div class="card-header">
             Inventory Breakdown by Category
-            <a href="{{ route('admin.dashboard.sendReport') }}" class="btn btn-info btn-sm float-right">Send Report</a>
+            <a href="{{ route('admin.reports.create') }}" class="btn btn-sm float-right" style="background-color: #ff904f; border-color: #ff904f; color: #ffffff;">Send Report</a>
             <a href="{{ route('admin.dashboard.download.pdf') }}" class="btn btn-primary btn-sm float-right mr-2">Download PDF</a>
         </div>
         <div class="card-body">
@@ -107,7 +107,7 @@
                     backgroundColor: [
                         '#ff6600',
                         '#ff8533',
-                        '#ffa366',
+                        'rgb(255, 163, 102)',
                         '#ffc299',
                         '#ffe0cc',
                         '#fff',

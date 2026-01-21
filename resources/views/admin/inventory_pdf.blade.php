@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Inventory Breakdown</title>
+    <title>Inventory Report</title>
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -12,7 +12,7 @@
             margin-bottom: 20px;
         }
         .header h1 {
-            font-family: 'Times New Roman', Times, serif;
+            font-family: 'Arial', Times, serif;
             font-size: 28px;
             margin: 0;
             font-weight: bold;
@@ -23,7 +23,7 @@
         }
         .title {
             text-align: center;
-            font-family: 'Times New Roman', Times, serif;
+            font-family: 'Arial', Times, serif;
             font-size: 20px;
             font-weight: bold;
             margin-bottom: 20px;
@@ -52,23 +52,33 @@
     </div>
 
     <div class="title">
-        Inventory Breakdown
+        Inventory Report
     </div>
 
     <table>
         <thead>
             <tr>
-                <th>Category Name</th>
-                <th>Item Count</th>
-                <th>Total Value</th>
+                <th>ID</th>
+                <th>Serial Number</th>
+                <th>Device Name</th>
+                <th>User</th>
+                <th>Department</th>
+                <th>Reference Number</th>
+                <th>Status</th>
+                <th>Value</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($categories as $category)
+            @foreach($items as $item)
             <tr>
-                <td>{{ $category->name }}</td>
-                <td>{{ $category->item->count() }}</td>
-                <td>Rs.{{ number_format($category->item_sum_value, 2) }}</td>
+                <td>{{ $item->id }}</td>
+                <td>{{ $item->serial_number }}</td>
+                <td>{{ $item->device_name }}</td>
+                <td>{{ $item->user->name ?? 'N/A' }}</td>
+                <td>{{ $item->user->department ?? 'N/A' }}</td>
+                <td>{{ $item->reference_number }}</td>
+                <td>{{ $item->status }}</td>
+                <td>Rs.{{ number_format($item->value, 2) }}</td>
             </tr>
             @endforeach
         </tbody>

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\AuditLogController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\User\DashboardController as UserDashboard;
 
 // Welcome Page
@@ -37,7 +38,10 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'role:super_admin,admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard');
      Route::get('/admin/dashboard/download-pdf', [AdminDashboard::class, 'downloadPDF'])->name('admin.dashboard.download.pdf');
-    Route::get('/admin/dashboard/send-report', [AdminDashboard::class, 'sendDashboardReport'])->name('admin.dashboard.sendReport');
+
+    // Report Routes
+    Route::get('/admin/reports/create', [ReportController::class, 'create'])->name('admin.reports.create');
+    Route::post('/admin/reports/send', [ReportController::class, 'send'])->name('admin.reports.send');
 
 
     // Category Management (write)
