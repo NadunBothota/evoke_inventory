@@ -36,6 +36,9 @@ Route::get('/dashboard', function () {
 // Admin / Super Admin Dashboard & Core Routes for write operations
 Route::middleware(['auth', 'role:super_admin,admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard');
+     Route::get('/admin/dashboard/download-pdf', [AdminDashboard::class, 'downloadPDF'])->name('admin.dashboard.download.pdf');
+    Route::get('/admin/dashboard/send-report', [AdminDashboard::class, 'sendDashboardReport'])->name('admin.dashboard.sendReport');
+
 
     // Category Management (write)
     Route::get('/admin/categories/create', [CategoryController::class, 'create'])->name('admin.categories.create');

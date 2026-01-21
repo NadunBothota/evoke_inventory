@@ -43,15 +43,15 @@
                                             default => 'info',
                                         };
                                     @endphp
-                                    <span class="badge bg-{{ $roleClass }}">{{ ucfirst($user->role) }}</span>
+                                    <span class="badge badge-outline-custom border-{{ $roleClass }}">{{ ucfirst($user->role) }}</span>
                                 </td>
                                 @if(auth()->user()->role === 'super_admin')
                                     <td>
-                                        <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-primary">Edit</a>
+                                        <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-outline-custom-edit">Edit</a>
                                         <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-custom-delete">Delete</button>
                                         </form>
                                     </td>
                                 @endif

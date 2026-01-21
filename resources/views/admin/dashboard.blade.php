@@ -59,6 +59,8 @@
     <div class="card mt-4">
         <div class="card-header">
             Inventory Breakdown by Category
+            <a href="{{ route('admin.dashboard.sendReport') }}" class="btn btn-info btn-sm float-right">Send Report</a>
+            <a href="{{ route('admin.dashboard.download.pdf') }}" class="btn btn-primary btn-sm float-right mr-2">Download PDF</a>
         </div>
         <div class="card-body">
             <table class="table table-striped">

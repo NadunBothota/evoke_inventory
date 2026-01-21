@@ -250,3 +250,41 @@ body {
 .login-header p {
     color: #6c757d;
 }
+
+
+/* Custom Outline Buttons */
+.btn-outline-custom-edit {
+    color: #000;
+    border-color: #ff8c00;
+    background-color: transparent;
+}
+.btn-outline-custom-edit:hover {
+    color: #fff;
+    background-color: #ff8c00;
+    border-color: #ff8c00;
+}
+
+.btn-outline-custom-delete {
+    color: #000;
+    border-color: #dc3545;
+    background-color: transparent;
+}
+.btn-outline-custom-delete:hover {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+/* Custom Outline Badges */
+.badge-outline-custom {
+    color: #000;
+    background-color: transparent;
+    border: 1px solid;
+}
+
+.border-primary { border-color: #0d6efd; }
+.border-secondary { border-color: #6c757d; }
+.border-success { border-color: #198754; }
+.border-danger { border-color: #dc3545; }
+.border-warning { border-color: #ffc107; }
+.border-info { border-color: #0dcaf0; }

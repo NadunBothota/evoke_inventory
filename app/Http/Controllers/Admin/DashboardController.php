@@ -7,6 +7,9 @@ use App\Models\Category;
 use App\Models\Item;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Mail\DashboardReportMail;
+use Illuminate\Support\Facades\Mail;
 
 class DashboardController extends Controller
 {
@@ -48,5 +51,36 @@ class DashboardController extends Controller
             'workingItems',
             'notWorkingItems'
         ));
+    }
+
+    public function downloadPDF()
+    {
+        // Calculate total value for each category
+        $categories = Category::with('item')
+            ->withSum('item', 'value')
+            ->get();
+        
+        $pdf = PDF::loadView('admin.inventory_pdf', compact('categories'));
+        return $pdf->download('inventory_breakdown.pdf');
+    }
+
+    public function sendDashboardReport()
+    {
+        // Calculate total value for each category
+        $categories = Category::with('item')
+            ->withSum('item', 'value')
+            ->get();
+        
+        $pdf = PDF::loadView('admin.inventory_pdf', compact('categories'))->output();
+
+        $admins = User::whereIn('role', ['admin', 'super_admin'])->get();
+
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new DashboardReportMail($pdf));
+        }
+
+        return redirect()
+            ->route('admin.dashboard')
+            ->with('success', 'Dashboard report sent to all admins.');
     }
 }
