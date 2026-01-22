@@ -7,6 +7,9 @@ use App\Models\Category;
 use App\Models\Item;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Mail\DashboardReportMail;
+use Illuminate\Support\Facades\Mail;
 
 class DashboardController extends Controller
 {
@@ -48,5 +51,13 @@ class DashboardController extends Controller
             'workingItems',
             'notWorkingItems'
         ));
+    }
+
+    public function downloadPDF()
+    {
+        // Calculate total value for each category
+        $items = Item::all();
+        $pdf = PDF::loadView('admin.inventory_pdf', compact('items'));
+        return $pdf->download('inventory_report.pdf');
     }
 }

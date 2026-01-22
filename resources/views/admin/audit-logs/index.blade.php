@@ -78,7 +78,7 @@
                                             default => 'secondary',
                                         };
                                     @endphp
-                                    <span class="badge bg-{{ $actionClass }}">{{ ucfirst($log->action) }}</span>
+                                    <span class="badge badge-outline-custom border-{{ $actionClass }}">{{ ucfirst($log->action) }}</span>
                                 </td>
                                 <td>
                                     {{ $log->model }}

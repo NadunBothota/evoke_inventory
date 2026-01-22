@@ -7,7 +7,7 @@
     <!-- Stats Cards -->
     <div class="row">
         <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
+            <div class="stat-card">
                 <div class="card-body">
                     <h5 class="card-title">Total Inventory Value</h5>
                     <p class="card-text fs-4">Rs.{{ number_format($totalValue, 2) }}</p>
@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-white bg-success mb-3">
+            <div class="stat-card">
                 <div class="card-body">
                     <h5 class="card-title">Total Items</h5>
                     <p class="card-text fs-4">{{ $totalItems }}</p>
@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-white bg-info mb-3">
+            <div class="stat-card">
                 <div class="card-body">
                     <h5 class="card-title">Total Categories</h5>
                     <p class="card-text fs-4">{{ $totalCategories }}</p>
@@ -55,23 +55,12 @@
         </div>
     </div>
 
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    Future Chart
-                </div>
-                <div class="card-body">
-                    <p class="text-center">This is a placeholder for your next chart.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Category Breakdown -->
     <div class="card mt-4">
         <div class="card-header">
             Inventory Breakdown by Category
+            <a href="{{ route('admin.reports.create') }}" class="btn btn-sm float-right" style="background-color: #ff904f; border-color: #ff904f; color: #ffffff;">Send Report</a>
+            <a href="{{ route('admin.dashboard.download.pdf') }}" class="btn btn-primary btn-sm float-right mr-2">Download PDF</a>
         </div>
         <div class="card-body">
             <table class="table table-striped">
@@ -116,21 +105,14 @@
                     label: 'Total Value',
                     data: categoryValues,
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
+                        '#ff6600',
+                        '#ff8533',
+                        'rgb(255, 163, 102)',
+                        '#ffc299',
+                        '#ffe0cc',
+                        '#fff',
                     ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
+                    borderColor: '#fff',
                     borderWidth: 1
                 }]
             }
@@ -151,15 +133,15 @@
                     {
                         label: 'Working',
                         data: workingItems,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: '#ff6600',
+                        borderColor: '#ff6600',
                         borderWidth: 1
                     },
                     {
                         label: 'Not Working',
                         data: notWorkingItems,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: '#000000',
+                        borderColor: '#000000',
                         borderWidth: 1
                     }
                 ]

@@ -5,7 +5,7 @@
     <title>Items Export</title>
     <style>
         body {
-            font-family: 'Times New Roman', serif;
+            font-family: 'Arial', serif;
             color: #333;
         }
         .header {
@@ -94,7 +94,7 @@
                         <td>{{ $item->device_name }}</td>
                         <td>{{ $item->department }}</td>
                         <td>{{ $item->reference_number }}</td>
-                        <td>{{ number_format($item->value, 2) }}</td>
+                        <td>Rs.{{ number_format ($item->value, 2) }}</td>
                         <td>{{ $item->status }}</td>
                         <td>{{ $item->category->name }}</td>
                     </tr>
