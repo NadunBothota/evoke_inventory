@@ -12,7 +12,7 @@
             margin-bottom: 20px;
         }
         .header h1 {
-            font-family: 'Arial', Times, serif;
+            font-family: 'Times New Roman', Times, serif;
             font-size: 28px;
             margin: 0;
             font-weight: bold;
@@ -23,7 +23,7 @@
         }
         .title {
             text-align: center;
-            font-family: 'Arial', Times, serif;
+            font-family: 'Times New Roman', Times, serif;
             font-size: 20px;
             font-weight: bold;
             margin-bottom: 20px;
@@ -32,6 +32,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
+            margin-bottom: 30px;
         }
         th, td {
             border: 1px solid #ddd;
@@ -41,6 +42,12 @@
         th {
             background-color: #f2f2f2;
             font-weight: bold;
+        }
+        .category-header {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -55,33 +62,40 @@
         Inventory Report
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Serial Number</th>
-                <th>Device Name</th>
-                <th>User</th>
-                <th>Department</th>
-                <th>Reference Number</th>
-                <th>Status</th>
-                <th>Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($items as $item)
-            <tr>
-                <td>{{ $item->id }}</td>
-                <td>{{ $item->serial_number }}</td>
-                <td>{{ $item->device_name }}</td>
-                <td>{{ $item->user->name ?? 'N/A' }}</td>
-                <td>{{ $item->user->department ?? 'N/A' }}</td>
-                <td>{{ $item->reference_number }}</td>
-                <td>{{ $item->status }}</td>
-                <td>Rs.{{ number_format($item->value, 2) }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    @foreach($itemsByCategory as $categoryName => $items)
+        <div class="category-header">
+            <h3>{{ $categoryName }}</h3>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Serial Number</th>
+                    <th>User</th>
+                    <th>Device/Equipment</th>
+                    <th>Department</th>
+                    <th>Reference Number</th>
+                    <th>Value</th>
+                    <th>Status</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($items as $key => $item)
+                <tr>
+                    <td>{{ $loop->parent->iteration }}.{{ $loop->iteration }}</td>
+                    <td>{{ $item->serial_number }}</td>
+                    <td>{{ $item->item_user }}</td>
+                    <td>{{ $item->device_name }}</td>
+                    <td>{{ $item->department }}</td>
+                    <td>{{ $item->reference_number }}</td>
+                    <td>Rs.{{ number_format($item->value, 2) }}</td>
+                    <td>{{ $item->status }}</td>
+                    <td>{{ $item->comments->first()->body ?? '' }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endforeach
 </body>
 </html>
