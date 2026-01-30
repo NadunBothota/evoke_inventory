@@ -71,7 +71,6 @@
             position: relative;
             text-align: center;
             text-decoration: none;
-            z-index: 10;
         }
     </style>
 @endsection
